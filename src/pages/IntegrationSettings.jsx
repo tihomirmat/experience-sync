@@ -78,17 +78,17 @@ export default function IntegrationSettings() {
     <div>
       <PageHeader title="Settings" subtitle="Manage company, integrations, and invoicing" />
 
-      {/* No Tenant State */}
+      {/* No Company State */}
       {!currentTenant && (
         <Card className="border-0 shadow-sm max-w-lg mx-auto mt-12">
           <CardContent className="p-8 text-center">
             <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
               <Building2 className="w-7 h-7 text-blue-500" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Create Your First Tenant</h3>
-            <p className="text-sm text-gray-500 mb-6">A tenant represents your tour operator business. Set up your company to get started.</p>
-            <Button onClick={() => { setTenantForm({ status: 'active', default_currency: 'EUR', timezone: 'Europe/Ljubljana', vat_mode: 'included', default_vat_rate: 0.095, languages_enabled: ['sl', 'en'] }); setShowTenantForm(true); }}>
-              <Plus className="w-4 h-4 mr-2" /> Create Tenant
+            <h3 className="text-lg font-semibold mb-2">Create Your First Company</h3>
+            <p className="text-sm text-gray-500 mb-6">Set up your tour operator company to get started.</p>
+            <Button onClick={() => { setTenantForm({ status: 'active', default_currency: 'EUR', timezone: 'Europe/Ljubljana', vat_mode: 'included', default_vat_rate: 0.095, languages_enabled: ['sl', 'en', 'de', 'hr'] }); setShowTenantForm(true); }}>
+              <Plus className="w-4 h-4 mr-2" /> Create Company
             </Button>
           </CardContent>
         </Card>
