@@ -179,7 +179,11 @@ export default function Invoices() {
     )},
   ];
 
-  if (!tenantId) return null;
+  if (!tenantId) return (
+    <div className="flex items-center justify-center h-64 text-gray-400">
+      <p>Select a company to view invoices.</p>
+    </div>
+  );
 
   return (
     <div>

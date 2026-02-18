@@ -76,7 +76,7 @@ export default function IntegrationSettings() {
 
   return (
     <div>
-      <PageHeader title="Settings" subtitle="Manage tenants, integrations, and invoicing" />
+      <PageHeader title="Settings" subtitle="Manage company, integrations, and invoicing" />
 
       {/* No Tenant State */}
       {!currentTenant && (
