@@ -56,7 +56,7 @@ export default function IntegrationSettings() {
     onSuccess: () => {
       refreshTenants();
       setShowTenantForm(false);
-      toast.success('Tenant created');
+      toast.success('Company created');
     },
   });
 
@@ -236,7 +236,7 @@ export default function IntegrationSettings() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowTenantForm(false)}>Cancel</Button>
-            <Button onClick={() => createTenantMutation.mutate(tenantForm)} disabled={createTenantMutation.isPending}>Create Tenant</Button>
+            <Button onClick={() => createTenantMutation.mutate(tenantForm)} disabled={createTenantMutation.isPending}>Create Company</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
