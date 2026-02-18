@@ -58,6 +58,7 @@ import Partners from './pages/Partners';
 import DmoFeeds from './pages/DmoFeeds';
 import Monitoring from './pages/Monitoring';
 import Reports from './pages/Reports';
+import IntegrationSettings from './pages/IntegrationSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +74,7 @@ export const PAGES = {
     "DmoFeeds": DmoFeeds,
     "Monitoring": Monitoring,
     "Reports": Reports,
+    "IntegrationSettings": IntegrationSettings,
 }
 
 export const pagesConfig = {
