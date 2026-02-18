@@ -95,19 +95,19 @@ export default function IntegrationSettings() {
       )}
 
       {currentTenant && (
-        <Tabs defaultValue="tenant">
+        <Tabs defaultValue="company">
           <TabsList className="bg-gray-100/70 mb-6">
-            <TabsTrigger value="tenant">Tenant</TabsTrigger>
+            <TabsTrigger value="company">Company</TabsTrigger>
             <TabsTrigger value="hub">Hub Connection</TabsTrigger>
             <TabsTrigger value="invoicing">Invoicing</TabsTrigger>
           </TabsList>
 
-          {/* Tenant Settings */}
-          <TabsContent value="tenant">
+          {/* Company Settings */}
+          <TabsContent value="company">
             <Card className="border-0 shadow-sm max-w-2xl">
               <CardHeader>
-                <CardTitle className="text-base">Tenant Details</CardTitle>
-                <CardDescription>Update your operator company information</CardDescription>
+                <CardTitle className="text-base">Company Details</CardTitle>
+                <CardDescription>Your tour operator company information</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
