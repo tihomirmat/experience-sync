@@ -122,7 +122,7 @@ export default function IntegrationSettings() {
                   <div className="space-y-1.5"><Label>Timezone</Label>
                     <Input value={currentTenant.timezone || 'Europe/Ljubljana'} disabled /></div>
                 </div>
-                <p className="text-xs text-gray-400">Contact support to update core tenant fields.</p>
+                <p className="text-xs text-gray-400">Contact support to update core company fields.</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -217,7 +217,7 @@ export default function IntegrationSettings() {
       {/* Create Tenant Dialog */}
       <Dialog open={showTenantForm} onOpenChange={setShowTenantForm}>
         <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>Create Tenant</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Create Company</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="space-y-1.5"><Label>Company Name</Label>
               <Input value={tenantForm.name || ''} onChange={e => setTenantForm({...tenantForm, name: e.target.value})} placeholder="e.g. Julijske Alpe Adventures" /></div>
