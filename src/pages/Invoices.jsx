@@ -235,6 +235,8 @@ export default function Invoices() {
                   <SelectContent>
                     <SelectItem value="sl">Slovenščina</SelectItem>
                     <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="de">Deutsch</SelectItem>
+                    <SelectItem value="hr">Hrvatski</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
