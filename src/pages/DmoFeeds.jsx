@@ -144,9 +144,101 @@ export default function DmoFeeds() {
         </CardContent>
       </Card>
 
+      {/* Feed Profiles */}
+      <Card className="border-0 shadow-sm mb-8">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-medium">Feed Profiles ({feedProfiles.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {feedProfiles.length === 0 ? (
+            <p className="text-sm text-gray-400 py-4 text-center">No feed profiles yet. Click "New Feed Profile" to create one.</p>
+          ) : (
+            <div className="space-y-2">
+              {feedProfiles.map(fp => {
+                const partner = partners.find(p => p.id === fp.partner_id);
+                return (
+                  <div key={fp.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50">
+                    <div>
+                      <p className="text-sm font-medium">{fp.profile_name}</p>
+                      <p className="text-xs text-gray-400">{partner?.name || fp.partner_id} · {fp.format}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className={fp.active ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'}>
+                        {fp.active ? 'Active' : 'Inactive'}
+                      </Badge>
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(fp)}><Pencil className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-700" onClick={() => deleteMutation.mutate(fp.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Access Logs */}
       <h3 className="text-base font-medium mb-4">Access Logs</h3>
-      <DataTable columns={logColumns} data={logs} isLoading={isLoading} emptyMessage="No API access logs yet" />
+      <DataTable columns={logColumns} data={logs} isLoading={logsLoading} emptyMessage="No API access logs yet" />
+
+      {/* Create / Edit Modal */}
+      <Dialog open={showModal} onOpenChange={v => { setShowModal(v); if (!v) { setForm(emptyForm); setEditingId(null); } }}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{editingId ? 'Edit Feed Profile' : 'New Feed Profile'}</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-2">
+            <div className="space-y-1.5">
+              <Label>Profile Name *</Label>
+              <Input value={form.profile_name} onChange={e => setForm({...form, profile_name: e.target.value})} placeholder="e.g. canonical-json" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Partner *</Label>
+              <Select value={form.partner_id} onValueChange={v => setForm({...form, partner_id: v})}>
+                <SelectTrigger><SelectValue placeholder="Select partner" /></SelectTrigger>
+                <SelectContent>
+                  {partners.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Format</Label>
+              <Select value={form.format} onValueChange={v => setForm({...form, format: v})}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="canonical_json">Canonical JSON</SelectItem>
+                  <SelectItem value="jabook_json">Jabook JSON</SelectItem>
+                  <SelectItem value="jabook_xml">Jabook XML</SelectItem>
+                  <SelectItem value="custom_json">Custom JSON</SelectItem>
+                  <SelectItem value="custom_csv">Custom CSV</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Field Map (JSON)</Label>
+              <Textarea value={form.field_map_json} onChange={e => setForm({...form, field_map_json: e.target.value})} rows={3} placeholder='{"our_field": "their_field"}' className="font-mono text-xs" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Transform Rules (JSON)</Label>
+              <Textarea value={form.transform_rules_json} onChange={e => setForm({...form, transform_rules_json: e.target.value})} rows={2} placeholder='{"lang": "en"}' className="font-mono text-xs" />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Notes</Label>
+              <Input value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} />
+            </div>
+            <div className="flex items-center gap-3">
+              <Switch checked={form.active} onCheckedChange={v => setForm({...form, active: v})} />
+              <Label>Active</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending || !form.profile_name || !form.partner_id}>
+              {saveMutation.isPending ? 'Saving...' : 'Save'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
