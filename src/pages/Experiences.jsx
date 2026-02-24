@@ -243,6 +243,24 @@ export default function Experiences() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Izbriši Experience</AlertDialogTitle>
+            <AlertDialogDescription>
+              Ali ste prepričani, da želite izbrisati "{deleteTarget?.title_en || deleteTarget?.title_sl}"? To dejanje je nepopravljivo.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Prekliči</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-600 hover:bg-red-700"
+              onClick={() => deleteMutation.mutate(deleteTarget.id)}>
+              Izbriši
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
