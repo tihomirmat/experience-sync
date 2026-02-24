@@ -16,9 +16,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 
+const emptyForm = { profile_name: '', format: 'canonical_json', field_map_json: '', transform_rules_json: '', notes: '', active: true, partner_id: '' };
+
 export default function DmoFeeds() {
   const { currentTenant } = useTenant();
   const tenantId = currentTenant?.id;
+  const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [editingId, setEditingId] = useState(null);
 
   const { data: partners = [] } = useQuery({
     queryKey: ['partners', tenantId],
