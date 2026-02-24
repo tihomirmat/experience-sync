@@ -128,18 +128,37 @@ export default function Experiences() {
             <DialogTitle>{editing ? 'Edit Experience' : 'New Experience'}</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-4">
+            {/* Titles */}
             <div className="col-span-2 sm:col-span-1 space-y-1.5">
-              <Label>Title (EN)</Label>
+              <Label>Title (EN) *</Label>
               <Input value={form.title_en || ''} onChange={e => setForm({...form, title_en: e.target.value})} />
             </div>
             <div className="col-span-2 sm:col-span-1 space-y-1.5">
               <Label>Title (SL)</Label>
               <Input value={form.title_sl || ''} onChange={e => setForm({...form, title_sl: e.target.value})} />
             </div>
-            <div className="col-span-2 space-y-1.5">
+
+            {/* Short Descriptions */}
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
               <Label>Short Description (EN)</Label>
               <Textarea value={form.short_description_en || ''} onChange={e => setForm({...form, short_description_en: e.target.value})} rows={2} />
             </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Short Description (SL)</Label>
+              <Textarea value={form.short_description_sl || ''} onChange={e => setForm({...form, short_description_sl: e.target.value})} rows={2} />
+            </div>
+
+            {/* Full Descriptions */}
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Full Description (EN)</Label>
+              <Textarea value={form.full_description_en || ''} onChange={e => setForm({...form, full_description_en: e.target.value})} rows={3} />
+            </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Full Description (SL)</Label>
+              <Textarea value={form.full_description_sl || ''} onChange={e => setForm({...form, full_description_sl: e.target.value})} rows={3} />
+            </div>
+
+            {/* Core fields */}
             <div className="space-y-1.5">
               <Label>Duration (min)</Label>
               <Input type="number" value={form.duration_minutes || ''} onChange={e => setForm({...form, duration_minutes: parseInt(e.target.value) || 0})} />
@@ -147,10 +166,6 @@ export default function Experiences() {
             <div className="space-y-1.5">
               <Label>Base Price (€)</Label>
               <Input type="number" step="0.01" value={form.base_price_from || ''} onChange={e => setForm({...form, base_price_from: parseFloat(e.target.value) || 0})} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Meeting Point</Label>
-              <Input value={form.meeting_point_name || ''} onChange={e => setForm({...form, meeting_point_name: e.target.value})} />
             </div>
             <div className="space-y-1.5">
               <Label>Status</Label>
@@ -163,9 +178,61 @@ export default function Experiences() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2 space-y-1.5">
+            <div className="space-y-1.5">
+              <Label>Currency</Label>
+              <Input value={form.currency || 'EUR'} onChange={e => setForm({...form, currency: e.target.value})} />
+            </div>
+
+            {/* Meeting Point */}
+            <div className="space-y-1.5">
+              <Label>Meeting Point Name</Label>
+              <Input value={form.meeting_point_name || ''} onChange={e => setForm({...form, meeting_point_name: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
               <Label>Meeting Point Address</Label>
               <Input value={form.meeting_point_address || ''} onChange={e => setForm({...form, meeting_point_address: e.target.value})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Latitude</Label>
+              <Input type="number" step="any" value={form.meeting_point_lat || ''} onChange={e => setForm({...form, meeting_point_lat: parseFloat(e.target.value) || null})} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Longitude</Label>
+              <Input type="number" step="any" value={form.meeting_point_lng || ''} onChange={e => setForm({...form, meeting_point_lng: parseFloat(e.target.value) || null})} />
+            </div>
+
+            {/* Booking URL */}
+            <div className="col-span-2 space-y-1.5">
+              <Label>Booking URL (direct)</Label>
+              <Input value={form.booking_url_direct || ''} onChange={e => setForm({...form, booking_url_direct: e.target.value})} placeholder="https://..." />
+            </div>
+
+            {/* Includes / Excludes */}
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Includes (EN)</Label>
+              <Textarea value={form.includes_en || ''} onChange={e => setForm({...form, includes_en: e.target.value})} rows={2} />
+            </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Includes (SL)</Label>
+              <Textarea value={form.includes_sl || ''} onChange={e => setForm({...form, includes_sl: e.target.value})} rows={2} />
+            </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Excludes (EN)</Label>
+              <Textarea value={form.excludes_en || ''} onChange={e => setForm({...form, excludes_en: e.target.value})} rows={2} />
+            </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Excludes (SL)</Label>
+              <Textarea value={form.excludes_sl || ''} onChange={e => setForm({...form, excludes_sl: e.target.value})} rows={2} />
+            </div>
+
+            {/* Cancellation Policy */}
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Cancellation Policy (EN)</Label>
+              <Textarea value={form.cancellation_policy_en || ''} onChange={e => setForm({...form, cancellation_policy_en: e.target.value})} rows={2} />
+            </div>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label>Cancellation Policy (SL)</Label>
+              <Textarea value={form.cancellation_policy_sl || ''} onChange={e => setForm({...form, cancellation_policy_sl: e.target.value})} rows={2} />
             </div>
           </div>
           <DialogFooter>
