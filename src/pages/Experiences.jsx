@@ -94,6 +94,12 @@ export default function Experiences() {
       </div>
     )},
     { header: 'Status', render: (row) => <StatusBadge status={row.status} /> },
+    { header: '', render: (row) => (
+      <Button variant="ghost" size="icon" className="h-7 w-7 text-red-400 hover:text-red-600 hover:bg-red-50"
+        onClick={e => { e.stopPropagation(); setDeleteTarget(row); }}>
+        <Trash2 className="w-3.5 h-3.5" />
+      </Button>
+    )},
   ];
 
   if (!tenantId) return null;
