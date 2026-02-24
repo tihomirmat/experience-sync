@@ -187,11 +187,13 @@ export default function DmoFeeds() {
 
       {/* Create / Edit Modal */}
       <Dialog open={showModal} onOpenChange={v => { setShowModal(v); if (!v) { setForm(emptyForm); setEditingId(null); } }}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingId ? 'Edit Feed Profile' : 'New Feed Profile'}</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
+
+          {/* Basic info always visible */}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Profile Name *</Label>
               <Input value={form.profile_name} onChange={e => setForm({...form, profile_name: e.target.value})} placeholder="e.g. canonical-json" />
@@ -219,22 +221,57 @@ export default function DmoFeeds() {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Field Map (JSON)</Label>
-              <Textarea value={form.field_map_json} onChange={e => setForm({...form, field_map_json: e.target.value})} rows={3} placeholder='{"our_field": "their_field"}' className="font-mono text-xs" />
-            </div>
-            <div className="space-y-1.5">
-              <Label>Transform Rules (JSON)</Label>
-              <Textarea value={form.transform_rules_json} onChange={e => setForm({...form, transform_rules_json: e.target.value})} rows={2} placeholder='{"lang": "en"}' className="font-mono text-xs" />
-            </div>
-            <div className="space-y-1.5">
               <Label>Notes</Label>
               <Input value={form.notes} onChange={e => setForm({...form, notes: e.target.value})} />
             </div>
-            <div className="flex items-center gap-3">
-              <Switch checked={form.active} onCheckedChange={v => setForm({...form, active: v})} />
-              <Label>Active</Label>
-            </div>
           </div>
+
+          {/* Partner API Key (read-only display) */}
+          {form.partner_id && (() => {
+            const partner = partners.find(p => p.id === form.partner_id);
+            return partner?.api_key ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Key className="w-3.5 h-3.5 text-amber-600" />
+                  <p className="text-xs font-medium text-amber-700">Partner API Key (send to partner)</p>
+                </div>
+                <div className="flex items-center gap-2 bg-white rounded-md border px-2 py-1.5">
+                  <code className="text-xs flex-1 break-all text-gray-600">{partner.api_key}</code>
+                  <button className="shrink-0 text-gray-400 hover:text-gray-600" onClick={() => { navigator.clipboard.writeText(partner.api_key); toast.success('API key copied!'); }}>
+                    <Copy className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ) : null;
+          })()}
+
+          {/* Tabbed editors */}
+          <Tabs defaultValue="fieldmap">
+            <TabsList className="w-full">
+              <TabsTrigger value="fieldmap" className="flex-1">Field Mapping</TabsTrigger>
+              <TabsTrigger value="transform" className="flex-1">Transform Rules</TabsTrigger>
+            </TabsList>
+            <TabsContent value="fieldmap" className="pt-3">
+              <p className="text-xs text-gray-400 mb-3">Map your experience fields to the partner's expected field names.</p>
+              <FieldMapEditor
+                value={form.field_map_json}
+                onChange={v => setForm(f => ({...f, field_map_json: v}))}
+              />
+            </TabsContent>
+            <TabsContent value="transform" className="pt-3">
+              <p className="text-xs text-gray-400 mb-3">Configure how data is transformed before sending to the partner.</p>
+              <TransformRulesEditor
+                value={form.transform_rules_json}
+                onChange={v => setForm(f => ({...f, transform_rules_json: v}))}
+              />
+            </TabsContent>
+          </Tabs>
+
+          <div className="flex items-center gap-3 pt-1">
+            <Switch checked={form.active} onCheckedChange={v => setForm({...form, active: v})} />
+            <Label>Active</Label>
+          </div>
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
             <Button onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending || !form.profile_name || !form.partner_id}>
