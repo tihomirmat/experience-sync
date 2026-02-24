@@ -32,11 +32,37 @@ export default function DmoFeeds() {
     enabled: !!tenantId,
   });
 
-  const { data: logs = [], isLoading } = useQuery({
+  const { data: logs = [], isLoading: logsLoading } = useQuery({
     queryKey: ['dmo-logs', tenantId],
     queryFn: () => base44.entities.DmoSyncLog.filter({ tenant_id: tenantId }, '-created_date', 50),
     enabled: !!tenantId,
   });
+
+  const { data: feedProfiles = [], isLoading: feedsLoading } = useQuery({
+    queryKey: ['feed-profiles', tenantId],
+    queryFn: () => base44.entities.PartnerFeedProfile.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: (data) => editingId
+      ? base44.entities.PartnerFeedProfile.update(editingId, data)
+      : base44.entities.PartnerFeedProfile.create({ ...data, tenant_id: tenantId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feed-profiles', tenantId] });
+      setShowModal(false);
+      setForm(emptyForm);
+      setEditingId(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.PartnerFeedProfile.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['feed-profiles', tenantId] }),
+  });
+
+  const openNew = () => { setForm(emptyForm); setEditingId(null); setShowModal(true); };
+  const openEdit = (fp) => { setForm({ ...fp }); setEditingId(fp.id); setShowModal(true); };
 
   const activePartners = partners.filter(p => p.status === 'active');
   const baseUrl = window.location.origin;
