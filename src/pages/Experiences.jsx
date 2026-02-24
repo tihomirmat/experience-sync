@@ -40,6 +40,12 @@ export default function Experiences() {
   });
 
   const [form, setForm] = useState({});
+  const [deleteTarget, setDeleteTarget] = useState(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Experience.delete(id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['experiences'] }); setDeleteTarget(null); },
+  });
 
   const openCreate = () => {
     setForm({ tenant_id: tenantId, status: 'active', currency: 'EUR' });
