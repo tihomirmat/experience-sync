@@ -87,7 +87,11 @@ export default function DmoFeeds() {
 
   return (
     <div>
-      <PageHeader title="DMO Feeds" subtitle="Public API endpoints for partner integration" />
+      <PageHeader
+        title="DMO Feeds"
+        subtitle="Public API endpoints for partner integration"
+        actions={<Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> New Feed Profile</Button>}
+      />
 
       {/* Endpoints Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
