@@ -233,6 +233,25 @@ export default function IntegrationSettings() {
               </CardContent>
             </Card>
           </TabsContent>
+          {/* Invoicing Providers Tab */}
+          <TabsContent value="providers">
+            <div className="space-y-4 max-w-2xl">
+              <div className="mb-2">
+                <h3 className="text-sm font-semibold">Invoicing Providers</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Connect Quibi or Čebelca to issue and fiscalize invoices directly from the app. Toggle "Default" to pick which provider is used by default on invoice actions.</p>
+              </div>
+              {['quibi', 'cebelca'].map(pid => (
+                <ProviderConnectionCard
+                  key={pid}
+                  providerId={pid}
+                  tenantId={tenantId}
+                  connection={invoicingConnections.find(c => c.provider_id === pid)}
+                  isDefault={defaultProvider === pid}
+                  onSetDefault={handleSetDefault}
+                />
+              ))}
+            </div>
+          </TabsContent>
         </Tabs>
       )}
 
