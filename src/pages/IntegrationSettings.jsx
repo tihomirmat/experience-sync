@@ -121,6 +121,7 @@ export default function IntegrationSettings() {
             <TabsTrigger value="company">Company</TabsTrigger>
             <TabsTrigger value="hub">Hub Connection</TabsTrigger>
             <TabsTrigger value="invoicing">Invoicing</TabsTrigger>
+            <TabsTrigger value="providers">Invoicing Providers</TabsTrigger>
           </TabsList>
 
           {/* Company Settings */}
