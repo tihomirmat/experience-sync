@@ -14,8 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Search, FileText, Send, Download, Trash2 } from 'lucide-react';
+import { Plus, Search, FileText, Send, Download, Trash2, ChevronRight } from 'lucide-react';
 import { format, addDays } from 'date-fns';
+import InvoiceProviderActions from '../components/invoicing/InvoiceProviderActions';
 
 export default function Invoices() {
   const { currentTenant } = useTenant();
@@ -26,6 +27,7 @@ export default function Invoices() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({});
   const [lines, setLines] = useState([]);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const preBookingId = urlParams.get('bookingId');
@@ -169,12 +171,15 @@ export default function Invoices() {
     { header: 'Total', render: r => <span className="font-medium">€{(r.gross_total || 0).toFixed(2)}</span> },
     { header: 'Status', render: r => <StatusBadge status={r.status} /> },
     { header: '', render: r => (
-      <div className="flex gap-1">
+      <div className="flex gap-1 items-center">
         {r.status === 'draft' && (
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => { e.stopPropagation(); updateMutation.mutate({ id: r.id, data: { status: 'sent' }}); }}>
             <Send className="w-3.5 h-3.5" />
           </Button>
         )}
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => { e.stopPropagation(); setSelectedInvoice(r); }}>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </Button>
       </div>
     )},
   ];
