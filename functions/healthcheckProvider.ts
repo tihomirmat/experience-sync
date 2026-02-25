@@ -8,7 +8,8 @@ Deno.serve(async (req) => {
   const { connection_id } = await req.json();
   if (!connection_id) return Response.json({ error: 'connection_id required' }, { status: 400 });
 
-  const connection = await base44.entities.InvoicingConnection.get(connection_id);
+  let connection;
+  try { connection = await base44.entities.InvoicingConnection.get(connection_id); } catch { /* not found */ }
   if (!connection) return Response.json({ error: 'Connection not found' }, { status: 404 });
 
   let creds = {};
