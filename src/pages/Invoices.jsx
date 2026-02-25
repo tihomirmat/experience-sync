@@ -218,6 +218,32 @@ export default function Invoices() {
         <DataTable columns={columns} data={filtered} isLoading={isLoading} />
       )}
 
+      {/* Invoice Provider Actions Panel */}
+      <Dialog open={!!selectedInvoice} onOpenChange={v => !v && setSelectedInvoice(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              {selectedInvoice?.invoice_number}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedInvoice && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div><p className="text-xs text-gray-400">Customer</p><p className="font-medium">{selectedInvoice.company_name || selectedInvoice.customer_name || '—'}</p></div>
+                <div><p className="text-xs text-gray-400">Total</p><p className="font-medium">€{(selectedInvoice.gross_total || 0).toFixed(2)}</p></div>
+                <div><p className="text-xs text-gray-400">Issue Date</p><p>{selectedInvoice.issue_date || '—'}</p></div>
+                <div><p className="text-xs text-gray-400">Status</p><p className="capitalize">{selectedInvoice.status}</p></div>
+              </div>
+              <div className="border-t pt-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Provider Actions</p>
+                <InvoiceProviderActions invoice={selectedInvoice} tenantId={tenantId} />
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* Invoice Form Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
