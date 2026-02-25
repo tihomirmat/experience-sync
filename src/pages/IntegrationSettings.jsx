@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Badge } from '@/components/ui/badge';
 import { Settings, Building2, Link2, Mail, FileText, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import ProviderConnectionCard from '../components/invoicing/ProviderConnectionCard';
 
 export default function IntegrationSettings() {
   const { currentTenant, tenants, refreshTenants } = useTenant();
@@ -31,6 +32,26 @@ export default function IntegrationSettings() {
 
   const [hubForm, setHubForm] = useState({ hub_type: 'bokun', status: 'active' });
   const [invoiceSettings, setInvoiceSettings] = useState({});
+  const [defaultProvider, setDefaultProvider] = useState(null);
+
+  const { data: invoicingConnections = [], refetch: refetchConnections } = useQuery({
+    queryKey: ['invoicing-connections', tenantId],
+    queryFn: () => base44.entities.InvoicingConnection.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+    onSuccess: (data) => {
+      const def = data.find(c => c.is_default);
+      if (def) setDefaultProvider(def.provider_id);
+    },
+  });
+
+  const handleSetDefault = async (providerId) => {
+    setDefaultProvider(providerId);
+    for (const conn of invoicingConnections) {
+      await base44.entities.InvoicingConnection.update(conn.id, { is_default: conn.provider_id === providerId });
+    }
+    refetchConnections();
+    toast.success(`${providerId === 'quibi' ? 'Quibi' : 'Čebelca'} set as default provider`);
+  };
 
   useEffect(() => {
     if (currentTenant) {
