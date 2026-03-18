@@ -87,6 +87,16 @@ export default function Partners() {
   return (
     <div>
       <PageHeader title="Partners & DMO" subtitle="Manage distribution partners and API access">
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Vsi tipi</SelectItem>
+            <SelectItem value="dmo">DMO</SelectItem>
+            <SelectItem value="hotel">Hotel</SelectItem>
+            <SelectItem value="agency">Agencija</SelectItem>
+            <SelectItem value="reseller">Reseller</SelectItem>
+          </SelectContent>
+        </Select>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
