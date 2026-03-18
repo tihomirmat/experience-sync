@@ -55,7 +55,11 @@ export default function Partners() {
 
   const openEdit = (p) => { setForm({...p}); setEditing(p); setGeneratedKey(null); setShowForm(true); };
 
-  const filtered = partners.filter(p => !search || p.name?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = partners.filter(p => {
+    const matchSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase());
+    const matchType = typeFilter === 'all' || p.partner_type === typeFilter;
+    return matchSearch && matchType;
+  });
 
   const columns = [
     { header: 'Partner', render: r => (
