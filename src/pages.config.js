@@ -74,6 +74,7 @@ export const PAGES = {
     "IntegrationSettings": IntegrationSettings,
     "Invoices": Invoices,
     "Monitoring": Monitoring,
+    "Groups": Groups,
     "Partners": Partners,
     "Reports": Reports,
 }
