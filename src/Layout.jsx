@@ -21,6 +21,7 @@ const navItems = [
   { name: 'Customers', icon: Users, page: 'Customers' },
   { name: 'Companies', icon: Building2, page: 'Companies' },
   { name: 'Invoices', icon: FileText, page: 'Invoices' },
+  { name: 'Agencije & Skupine', icon: Users, page: 'Groups' },
   { name: 'Partners', icon: Handshake, page: 'Partners' },
   { name: 'DMO Feeds', icon: Globe, page: 'DmoFeeds' },
   { name: 'Monitoring', icon: Activity, page: 'Monitoring' },
