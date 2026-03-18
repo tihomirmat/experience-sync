@@ -23,6 +23,7 @@ export default function Invoices() {
   const tenantId = currentTenant?.id;
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState('all');
+  const [channelFilter, setChannelFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({});
@@ -155,7 +156,9 @@ export default function Invoices() {
   const filtered = invoices.filter(i => {
     const matchStatus = statusFilter === 'all' || i.status === statusFilter;
     const matchSearch = !search || i.invoice_number?.toLowerCase().includes(search.toLowerCase()) || i.customer_name?.toLowerCase().includes(search.toLowerCase()) || i.company_name?.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchSearch;
+    const booking = bookingMap[i.booking_id];
+    const matchChannel = channelFilter === 'all' || booking?.channel === channelFilter;
+    return matchStatus && matchSearch && matchChannel;
   });
 
   const bookingMap = bookings.reduce((m, b) => { m[b.id] = b; return m; }, {});
