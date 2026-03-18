@@ -13,7 +13,7 @@ import {
   Inbox, FileText, Users, Calendar, TrendingUp, ArrowRight,
   DollarSign, ShoppingBag, Globe, AlertTriangle
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, subMonths, startOfMonth, endOfMonth, getMonth, getYear } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {
