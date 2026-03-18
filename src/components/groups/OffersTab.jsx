@@ -48,6 +48,7 @@ export default function OffersTab({ tenantId }) {
 
   const acceptMutation = useMutation({
     mutationFn: async (offer) => {
+      // 1. Create booking
       const booking = await base44.entities.Booking.create({
         tenant_id: tenantId,
         experience_id: offer.experience_id,
@@ -58,15 +59,65 @@ export default function OffersTab({ tenantId }) {
         customer_name: offer.contact_name,
         customer_email: offer.contact_email,
         company_name: offer.company_name,
+        company_vat_id: offer.company_vat_id,
         adults: offer.group_size,
         total_pax: offer.group_size,
         gross_total: offer.total_price,
+        net_total: offer.total_price,
         currency: offer.currency || 'EUR',
         channel: 'direct',
       });
-      return base44.entities.GroupOffer.update(offer.id, { status: 'accepted', accepted_at: new Date().toISOString(), booking_id: booking.id });
+
+      // 2. Create invoice
+      const allTenants = await base44.entities.Tenant.list();
+      const t = allTenants.find(t => t.id === tenantId);
+      const seq = (t?.invoice_seq_current || 0) + 1;
+      const invNumber = `${t?.invoice_prefix || 'INV-'}${String(seq).padStart(6, '0')}`;
+      await base44.entities.Tenant.update(tenantId, { invoice_seq_current: seq });
+
+      const today = new Date().toISOString().split('T')[0];
+      const invoice = await base44.entities.Invoice.create({
+        tenant_id: tenantId,
+        invoice_number: invNumber,
+        invoice_type: 'invoice',
+        status: 'draft',
+        language: 'sl',
+        booking_id: booking.id,
+        customer_name: offer.contact_name,
+        company_name: offer.company_name,
+        company_vat_id: offer.company_vat_id,
+        issue_date: today,
+        currency: offer.currency || 'EUR',
+        gross_total: offer.total_price || 0,
+        net_total: offer.total_price || 0,
+        vat_total: 0,
+        lines: [{
+          description: `${offer.experience_title} – ${offer.proposed_date || ''} (${offer.group_size} oseb)`,
+          qty: offer.group_size,
+          unit_price_net: (offer.price_per_person || 0),
+          vat_rate: 0,
+          vat_amount: 0,
+          line_total_gross: offer.total_price || 0,
+        }],
+      });
+
+      // 3. Link booking → invoice
+      await base44.entities.Booking.update(booking.id, { invoice_id: invoice.id });
+
+      // 4. Update offer with all links
+      return base44.entities.GroupOffer.update(offer.id, {
+        status: 'accepted',
+        accepted_at: new Date().toISOString(),
+        booking_id: booking.id,
+        invoice_id: invoice.id,
+      });
     },
-    onSuccess: (updated) => { queryClient.invalidateQueries({ queryKey: ['group-offers'] }); setSelected(updated); },
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: ['group-offers'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      setSelected(updated);
+    },
   });
 
   const openPdf = (offer) => {
