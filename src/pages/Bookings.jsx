@@ -213,40 +213,101 @@ export default function Bookings() {
       </Dialog>
 
       {/* Booking Detail Dialog */}
-      <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
+      <Dialog open={!!selectedBooking} onOpenChange={() => { setSelectedBooking(null); setShowInvoiceForm(false); }}>
         <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>Booking Details</DialogTitle></DialogHeader>
-          {selectedBooking && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div><p className="text-xs text-gray-400">Customer</p><p className="font-medium">{selectedBooking.customer_name || 'Guest'}</p></div>
-                <div><p className="text-xs text-gray-400">Email</p><p className="text-sm">{selectedBooking.customer_email || '—'}</p></div>
-                <div><p className="text-xs text-gray-400">Experience</p><p className="text-sm">{selectedBooking.experience_title}</p></div>
-                <div><p className="text-xs text-gray-400">Date</p><p className="text-sm">{selectedBooking.departure_date || '—'}</p></div>
-                <div><p className="text-xs text-gray-400">Pax</p><p className="text-sm">{selectedBooking.adults} adults, {selectedBooking.children} children</p></div>
-                <div><p className="text-xs text-gray-400">Channel</p><Badge variant="outline" className="capitalize">{selectedBooking.channel}</Badge></div>
-                <div><p className="text-xs text-gray-400">Total</p><p className="font-medium">€{(selectedBooking.gross_total || 0).toFixed(2)}</p></div>
-                <div><p className="text-xs text-gray-400">Status</p><StatusBadge status={selectedBooking.status} /></div>
+          <DialogHeader><DialogTitle>Podrobnosti rezervacije</DialogTitle></DialogHeader>
+          {selectedBooking && (() => {
+            const linkedInvoice = invoices.find(i => i.id === selectedBooking.invoice_id);
+            return (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div><p className="text-xs text-gray-400">Gost</p><p className="font-medium">{selectedBooking.customer_name || 'Guest'}</p></div>
+                  <div><p className="text-xs text-gray-400">Email</p><p className="text-sm">{selectedBooking.customer_email || '—'}</p></div>
+                  <div><p className="text-xs text-gray-400">Doživetje</p><p className="text-sm">{selectedBooking.experience_title}</p></div>
+                  <div><p className="text-xs text-gray-400">Datum</p><p className="text-sm">{selectedBooking.departure_date || '—'}</p></div>
+                  <div><p className="text-xs text-gray-400">Osebe</p><p className="text-sm">{selectedBooking.adults} odraslih, {selectedBooking.children} otrok</p></div>
+                  <div><p className="text-xs text-gray-400">Kanal</p><Badge variant="outline" className="capitalize">{selectedBooking.channel}</Badge></div>
+                  <div><p className="text-xs text-gray-400">Skupaj</p><p className="font-medium">€{(selectedBooking.gross_total || 0).toFixed(2)}</p></div>
+                  <div><p className="text-xs text-gray-400">Status</p><StatusBadge status={selectedBooking.status} /></div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Select defaultValue={selectedBooking.status} onValueChange={v => updateMutation.mutate({ id: selectedBooking.id, data: { status: v }})}>
+                    <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="confirmed">Confirmed</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                      <SelectItem value="no_show">No Show</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Invoice Section */}
+                <div className="border-t pt-4">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">🧾 Račun</p>
+                  {linkedInvoice ? (
+                    <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
+                      <div>
+                        <p className="text-sm font-medium text-[#1a5c38]">{linkedInvoice.invoice_number}</p>
+                        <StatusBadge status={linkedInvoice.status} />
+                      </div>
+                      <Link to={createPageUrl('Invoices')} onClick={() => setSelectedBooking(null)}>
+                        <Button variant="outline" size="sm" className="gap-1">
+                          <ExternalLink className="w-3 h-3" /> Poglej račun
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : showInvoiceForm ? (
+                    <div className="space-y-3 bg-gray-50 rounded-lg p-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div><Label className="text-xs">Datum izdaje</Label>
+                          <Input type="date" className="mt-1" value={invoiceForm.issue_date || ''} onChange={e => setInvoiceForm(f => ({ ...f, issue_date: e.target.value }))} /></div>
+                        <div><Label className="text-xs">Rok plačila</Label>
+                          <Input type="date" className="mt-1" value={invoiceForm.due_date || ''} onChange={e => setInvoiceForm(f => ({ ...f, due_date: e.target.value }))} /></div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" className="bg-[#1a5c38] hover:bg-[#154d2f] text-white"
+                          onClick={() => createInvoiceMutation.mutate({ booking: selectedBooking, formData: invoiceForm })}
+                          disabled={createInvoiceMutation.isPending}>
+                          Ustvari račun
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => setShowInvoiceForm(false)}>Prekliči</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button variant="outline" size="sm" className="gap-2" onClick={() => {
+                      const today = format(new Date(), 'yyyy-MM-dd');
+                      const due = format(addDays(new Date(), 15), 'yyyy-MM-dd');
+                      setInvoiceForm({
+                        invoice_type: 'invoice', status: 'draft', language: 'sl',
+                        customer_name: selectedBooking.customer_name,
+                        customer_id: selectedBooking.customer_id,
+                        company_name: selectedBooking.company_name,
+                        company_vat_id: selectedBooking.company_vat_id,
+                        issue_date: today, due_date: due, currency: 'EUR',
+                        net_total: selectedBooking.net_total || 0,
+                        vat_total: selectedBooking.vat_total || 0,
+                        gross_total: selectedBooking.gross_total || 0,
+                        lines: [{
+                          description: `${selectedBooking.experience_title} – ${selectedBooking.departure_date || ''} (${selectedBooking.total_pax || selectedBooking.adults} pax)`,
+                          qty: selectedBooking.total_pax || selectedBooking.adults || 1,
+                          unit_price_net: (selectedBooking.net_total || selectedBooking.gross_total || 0) / Math.max(selectedBooking.total_pax || selectedBooking.adults || 1, 1),
+                          vat_rate: currentTenant?.default_vat_rate || 0.095,
+                          vat_amount: selectedBooking.vat_total || 0,
+                          line_total_gross: selectedBooking.gross_total || 0,
+                        }],
+                      });
+                      setShowInvoiceForm(true);
+                    }}>
+                      <FileText className="w-3.5 h-3.5" /> Ustvari račun
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex gap-2 pt-2">
-                <Select defaultValue={selectedBooking.status} onValueChange={v => updateMutation.mutate({ id: selectedBooking.id, data: { status: v }})}>
-                  <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="confirmed">Confirmed</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                    <SelectItem value="no_show">No Show</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Link to={createPageUrl(`Invoices?bookingId=${selectedBooking.id}`)}>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <FileText className="w-3.5 h-3.5" /> Create Invoice
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
+            );
+          })()}
         </DialogContent>
       </Dialog>
     </div>
