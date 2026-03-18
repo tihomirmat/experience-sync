@@ -267,8 +267,20 @@ export default function OffersTab({ tenantId }) {
                 {selected.status !== 'accepted' && (
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700" size="sm"
                     onClick={() => acceptMutation.mutate(selected)} disabled={acceptMutation.isPending}>
-                    ✅ Označi kot sprejeto → ustvari rezervacijo
+                    {acceptMutation.isPending ? 'Ustvarjam...' : '✅ Označi kot sprejeto → ustvari rezervacijo + račun'}
                   </Button>
+                )}
+                {selected.status === 'accepted' && selected.booking_id && (
+                  <div className="space-y-2">
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-sm text-emerald-700">
+                      ✅ Rezervacija ustvarjena
+                    </div>
+                    {selected.invoice_id && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm text-blue-700">
+                        🧾 Račun ustvarjen
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
 
