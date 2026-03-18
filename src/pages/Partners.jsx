@@ -61,6 +61,8 @@ export default function Partners() {
     return matchSearch && matchType;
   });
 
+  const TYPE_COLORS = { dmo: 'bg-blue-50 text-blue-700 border-blue-200', hotel: 'bg-purple-50 text-purple-700 border-purple-200', agency: 'bg-amber-50 text-amber-700 border-amber-200', reseller: 'bg-gray-50 text-gray-600 border-gray-200' };
+
   const columns = [
     { header: 'Partner', render: r => (
       <div>
@@ -68,10 +70,16 @@ export default function Partners() {
         <p className="text-xs text-gray-400">{r.slug}</p>
       </div>
     )},
-    { header: 'Type', render: r => <Badge variant="outline" className="capitalize text-xs">{r.partner_type}</Badge> },
+    { header: 'Tip', render: r => <Badge variant="outline" className={`capitalize text-xs border ${TYPE_COLORS[r.partner_type] || ''}`}>{r.partner_type}</Badge> },
     { header: 'Pricing', render: r => <span className="capitalize text-sm">{r.pricing_mode || 'gross'}</span> },
     { header: 'Commission', render: r => <span className="text-sm">{r.commission_rate ? `${(r.commission_rate * 100).toFixed(0)}%` : '—'}</span> },
     { header: 'Status', render: r => <StatusBadge status={r.status} /> },
+    { header: '', render: r => r.partner_type === 'agency' ? (
+      <Link to={`/Groups?company=${encodeURIComponent(r.name)}`} onClick={e => e.stopPropagation()}
+        className="flex items-center gap-1 text-xs text-blue-600 hover:underline">
+        <ExternalLink className="w-3 h-3" /> Poizvedbe
+      </Link>
+    ) : null },
   ];
 
   if (!tenantId) return null;
