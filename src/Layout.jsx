@@ -25,6 +25,7 @@ const navItems = [
   { name: 'Partners', icon: Handshake, page: 'Partners' },
   { name: 'DMO Feeds', icon: Globe, page: 'DmoFeeds' },
   { name: 'Monitoring', icon: Activity, page: 'Monitoring' },
+  { name: 'Analitika', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: BarChart3, page: 'Reports' },
   { name: 'Settings', icon: Settings, page: 'IntegrationSettings' },
 ];

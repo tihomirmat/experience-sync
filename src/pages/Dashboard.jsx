@@ -92,10 +92,18 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <PageHeader 
-        title={`Good ${new Date().getHours() < 12 ? 'morning' : 'afternoon'}`}
-        subtitle={`${currentTenant.name} · ${format(new Date(), 'EEEE, MMM d, yyyy')}`}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <PageHeader 
+          title={`Good ${new Date().getHours() < 12 ? 'morning' : 'afternoon'}`}
+          subtitle={`${currentTenant.name} · ${format(new Date(), 'EEEE, MMM d, yyyy')}`}
+        />
+        <Link
+          to="/Analytics"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#1a5c38] text-white rounded-lg text-sm font-medium hover:bg-[#1a5c38]/90 transition-colors shrink-0"
+        >
+          <TrendingUp className="w-4 h-4" /> 📊 Odpri analitiko
+        </Link>
+      </div>
 
       {/* Alerts */}
       {alerts.length > 0 && (
