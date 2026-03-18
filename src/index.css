@@ -84,6 +84,5 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   }
 }

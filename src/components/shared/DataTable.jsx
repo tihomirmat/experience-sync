@@ -1,42 +1,71 @@
+import React from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function DataTable({ columns, data, isLoading, onRowClick, emptyText = 'Ni podatkov' }) {
+export default function DataTable({ columns, data, isLoading, onRowClick, emptyMessage = 'No data found' }) {
   if (isLoading) {
     return (
-      <div className="p-6 space-y-3">
-        {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+      <div className="rounded-xl border bg-white overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-50/50">
+              {columns.map((col, i) => (
+                <TableHead key={i} className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                  {col.header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array(5).fill(0).map((_, i) => (
+              <TableRow key={i}>
+                {columns.map((_, j) => (
+                  <TableCell key={j}><Skeleton className="h-4 w-24" /></TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b bg-gray-50">
+    <div className="rounded-xl border bg-white overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-gray-50/50">
             {columns.map((col, i) => (
-              <th key={i} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+              <TableHead key={i} className="text-xs font-medium uppercase tracking-wider text-gray-400">
                 {col.header}
-              </th>
+              </TableHead>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.length === 0 ? (
-            <tr><td colSpan={columns.length} className="px-4 py-10 text-center text-gray-400">{emptyText}</td></tr>
-          ) : data.map((row, ri) => (
-            <tr key={row.id || ri}
-              onClick={() => onRowClick?.(row)}
-              className={onRowClick ? 'hover:bg-gray-50 cursor-pointer transition-colors' : ''}>
-              {columns.map((col, ci) => (
-                <td key={ci} className="px-4 py-3 whitespace-nowrap">
-                  {col.render ? col.render(row) : row[col.key]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <TableRow>
+              <TableCell colSpan={columns.length} className="text-center py-12 text-gray-400">
+                {emptyMessage}
+              </TableCell>
+            </TableRow>
+          ) : (
+            data.map((row, i) => (
+              <TableRow 
+                key={row.id || i} 
+                className={onRowClick ? 'cursor-pointer hover:bg-gray-50/50 transition-colors' : ''}
+                onClick={() => onRowClick?.(row)}
+              >
+                {columns.map((col, j) => (
+                  <TableCell key={j} className="text-sm">
+                    {col.render ? col.render(row) : row[col.key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
