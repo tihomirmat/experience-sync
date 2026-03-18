@@ -13,10 +13,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Inbox, FileText, Users } from 'lucide-react';
-import { format } from 'date-fns';
+import { Plus, Search, Inbox, FileText, Users, ExternalLink } from 'lucide-react';
+import { format, addDays } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
+import { toast } from 'sonner';
 
 export default function Bookings() {
   const { currentTenant } = useTenant();

@@ -158,20 +158,49 @@ export default function Invoices() {
     return matchStatus && matchSearch;
   });
 
+  const bookingMap = bookings.reduce((m, b) => { m[b.id] = b; return m; }, {});
+
+  // Summary totals for filtered invoices
+  const summaryTotals = filtered.reduce((acc, i) => ({
+    net: acc.net + (i.net_total || 0),
+    vat: acc.vat + (i.vat_total || 0),
+    gross: acc.gross + (i.gross_total || 0),
+    paid: acc.paid + (i.status === 'paid' ? (i.gross_total || 0) : 0),
+    unpaid: acc.unpaid + ((i.status === 'sent' || i.status === 'draft') ? (i.gross_total || 0) : 0),
+    commission: acc.commission + ((bookingMap[i.booking_id]?.commission_total) || 0),
+  }), { net: 0, vat: 0, gross: 0, paid: 0, unpaid: 0, commission: 0 });
+
   const columns = [
-    { header: 'Number', render: r => <span className="font-mono text-sm font-medium">{r.invoice_number}</span> },
-    { header: 'Type', render: r => <span className="text-sm capitalize">{r.invoice_type?.replace('_', ' ')}</span> },
-    { header: 'Customer / Company', render: r => (
+    { header: 'Številka', render: r => <span className="font-mono text-sm font-medium">{r.invoice_number}</span> },
+    { header: 'Stranka', render: r => (
       <div>
         <p className="text-sm font-medium">{r.company_name || r.customer_name || '—'}</p>
         {r.company_vat_id && <p className="text-xs text-gray-400">{r.company_vat_id}</p>}
       </div>
     )},
-    { header: 'Date', render: r => <span className="text-sm">{r.issue_date || '—'}</span> },
-    { header: 'Total', render: r => <span className="font-medium">€{(r.gross_total || 0).toFixed(2)}</span> },
+    { header: 'Rezervacija', render: r => {
+      const b = bookingMap[r.booking_id];
+      return b ? <span className="text-xs text-gray-600 truncate max-w-[120px] block">{b.experience_title || '—'}</span> : <span className="text-gray-300">—</span>;
+    }},
+    { header: 'Kanal', render: r => {
+      const b = bookingMap[r.booking_id];
+      return b?.channel ? <span className="text-xs capitalize bg-gray-100 rounded px-2 py-0.5">{b.channel}</span> : <span className="text-gray-300">—</span>;
+    }},
+    { header: 'Provizija', render: r => {
+      const c = bookingMap[r.booking_id]?.commission_total;
+      return c ? <span className="text-xs text-red-600">€{c.toFixed(2)}</span> : <span className="text-gray-300">—</span>;
+    }},
+    { header: 'Datum', render: r => <span className="text-sm">{r.issue_date || '—'}</span> },
+    { header: 'Skupaj', render: r => <span className="font-medium">€{(r.gross_total || 0).toFixed(2)}</span> },
     { header: 'Status', render: r => <StatusBadge status={r.status} /> },
     { header: '', render: r => (
       <div className="flex gap-1 items-center">
+        {(r.status === 'draft' || r.status === 'sent') && (
+          <Button variant="ghost" size="sm" className="h-7 text-xs text-[#1a5c38]"
+            onClick={(e) => { e.stopPropagation(); updateMutation.mutate({ id: r.id, data: { status: 'paid', notes: `Plačano: ${format(new Date(), 'dd.MM.yyyy')}` }}); }}>
+            ✓ Plačano
+          </Button>
+        )}
         {r.status === 'draft' && (
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={(e) => { e.stopPropagation(); updateMutation.mutate({ id: r.id, data: { status: 'sent' }}); }}>
             <Send className="w-3.5 h-3.5" />
