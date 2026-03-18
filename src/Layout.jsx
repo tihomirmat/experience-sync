@@ -6,7 +6,7 @@ import { TenantProvider, useTenant } from './components/shared/TenantContext';
 import { 
   LayoutDashboard, Map, Calendar, Inbox, Users, Building2, 
   FileText, Handshake, Globe, Activity, BarChart3, Settings,
-  ChevronDown, Menu, X, LogOut, Bell
+  ChevronDown, Menu, X, LogOut, Bell, Plug
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,7 +27,7 @@ const navItems = [
   { name: 'Monitoring', icon: Activity, page: 'Monitoring' },
   { name: 'Analitika', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: BarChart3, page: 'Reports' },
-  { name: 'Integracije', icon: Settings, page: 'Integrations' },
+  { name: 'Integracije', icon: Plug, page: 'Integrations' },
   { name: 'Settings', icon: Settings, page: 'IntegrationSettings' },
 ];
 
