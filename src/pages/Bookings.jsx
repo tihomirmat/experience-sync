@@ -28,6 +28,8 @@ export default function Bookings() {
   const [showForm, setShowForm] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [form, setForm] = useState({});
+  const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+  const [invoiceForm, setInvoiceForm] = useState({});
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ['bookings', tenantId],
@@ -46,9 +48,39 @@ export default function Bookings() {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setShowForm(false); },
   });
 
+  const { data: invoices = [] } = useQuery({
+    queryKey: ['bookings-invoices', tenantId],
+    queryFn: () => base44.entities.Invoice.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+  });
+
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Booking.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setSelectedBooking(null); },
+    onSuccess: (updated) => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setSelectedBooking(prev => prev ? { ...prev, ...updated } : null); },
+  });
+
+  const createInvoiceMutation = useMutation({
+    mutationFn: async ({ booking, formData }) => {
+      const tenant = currentTenant;
+      const seq = (tenant.invoice_seq_current || 0) + 1;
+      const invNumber = `${tenant.invoice_prefix || 'INV-'}${String(seq).padStart(6, '0')}`;
+      await base44.entities.Tenant.update(tenant.id, { invoice_seq_current: seq });
+      const inv = await base44.entities.Invoice.create({
+        ...formData,
+        invoice_number: invNumber,
+        tenant_id: tenantId,
+        booking_id: booking.id,
+      });
+      await base44.entities.Booking.update(booking.id, { invoice_id: inv.id });
+      return inv;
+    },
+    onSuccess: (inv) => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings-invoices'] });
+      setShowInvoiceForm(false);
+      setSelectedBooking(prev => prev ? { ...prev, invoice_id: inv.id } : null);
+      toast.success('Račun ustvarjen');
+    },
   });
 
   const filtered = bookings.filter(b => {
