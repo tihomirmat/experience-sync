@@ -107,7 +107,12 @@ function SidebarContent({ currentPageName, onClose }) {
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
             >
               <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
-              {item.name}
+              <span className="flex-1">{item.name}</span>
+              {item.page === 'Invoices' && unpaidCount > 0 && (
+                <span className="ml-auto text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
+                  {unpaidCount}
+                </span>
+              )}
             </Link>
           );
         })}
