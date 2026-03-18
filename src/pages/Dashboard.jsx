@@ -148,6 +148,25 @@ export default function Dashboard() {
         <StatCard title="Open Invoices" value={pendingInvoices} icon={FileText} color="amber" />
       </div>
 
+      {/* Mini Revenue Chart */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardTitle className="text-base font-medium">Prihodek — zadnjih 6 mesecev</CardTitle>
+          <Link to="/Analytics" className="text-xs text-[#1a5c38] hover:underline font-medium">Vsa analitika →</Link>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={miniChartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 10 }} tickFormatter={v => `€${(v/1000).toFixed(0)}k`} />
+              <Tooltip formatter={v => [`€${v.toLocaleString('de-DE', { minimumFractionDigits: 2 })}`, 'Neto']} />
+              <Bar dataKey="net" fill="#1a5c38" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Channel Mix */}
         <Card className="lg:col-span-2 border-0 shadow-sm">
