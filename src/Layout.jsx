@@ -27,6 +27,7 @@ const navItems = [
   { name: 'Monitoring', icon: Activity, page: 'Monitoring' },
   { name: 'Analitika', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: BarChart3, page: 'Reports' },
+  { name: 'Integracije', icon: Settings, page: 'Integrations' },
   { name: 'Settings', icon: Settings, page: 'IntegrationSettings' },
 ];
 

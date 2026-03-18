@@ -61,6 +61,7 @@ import Groups from './pages/Groups';
 import Partners from './pages/Partners';
 import Reports from './pages/Reports';
 import Analytics from './pages/Analytics.jsx';
+import Integrations from './pages/Integrations.jsx';
 import __Layout from './Layout.jsx';
 
 
@@ -79,6 +80,7 @@ export const PAGES = {
     "Partners": Partners,
     "Reports": Reports,
     "Analytics": Analytics,
+    "Integrations": Integrations,
 }
 
 export const pagesConfig = {
