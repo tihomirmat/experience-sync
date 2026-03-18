@@ -23,6 +23,7 @@ export default function Partners() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [form, setForm] = useState({});
   const [generatedKey, setGeneratedKey] = useState(null);
 
