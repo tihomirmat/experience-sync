@@ -57,6 +57,7 @@ import Experiences from './pages/Experiences';
 import IntegrationSettings from './pages/IntegrationSettings';
 import Invoices from './pages/Invoices';
 import Monitoring from './pages/Monitoring';
+import Groups from './pages/Groups';
 import Partners from './pages/Partners';
 import Reports from './pages/Reports';
 import __Layout from './Layout.jsx';
