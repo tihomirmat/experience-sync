@@ -90,6 +90,27 @@ export default function Dashboard() {
 
   const recentBookings = bookings.slice(0, 5);
 
+  // Mini 6-month revenue chart
+  const now = new Date();
+  const last6Months = Array.from({ length: 6 }, (_, i) => {
+    const d = subMonths(now, 5 - i);
+    const m = getMonth(d);
+    const y = getYear(d);
+    const MONTHS = ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Avg','Sep','Okt','Nov','Dec'];
+    return { name: MONTHS[m], month: m, year: y };
+  });
+  const { data: allBookings = [] } = { data: bookings }; // reuse loaded bookings (limited to 50, sufficient for mini chart)
+  const miniChartData = last6Months.map(({ name, month, year }) => {
+    const net = bookings
+      .filter(b => {
+        if (!b.departure_date) return false;
+        const d = new Date(b.departure_date);
+        return getMonth(d) === month && getYear(d) === year && (b.status === 'confirmed' || b.status === 'completed');
+      })
+      .reduce((s, b) => s + (b.net_total || 0), 0);
+    return { name, net };
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
