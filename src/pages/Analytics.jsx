@@ -9,6 +9,7 @@ import ChannelSection from '../components/analytics/ChannelSection';
 import SeasonalitySection from '../components/analytics/SeasonalitySection';
 import ExperienceTable from '../components/analytics/ExperienceTable';
 import DemographicsSection from '../components/analytics/DemographicsSection';
+import InvoiceFinanceSection from '../components/analytics/InvoiceFinanceSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 
@@ -42,6 +43,12 @@ export default function Analytics() {
   const { data: customers = [] } = useQuery({
     queryKey: ['analytics-customers', tenantId],
     queryFn: () => base44.entities.Customer.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+  });
+
+  const { data: allInvoices = [] } = useQuery({
+    queryKey: ['analytics-invoices', tenantId],
+    queryFn: () => base44.entities.Invoice.filter({ tenant_id: tenantId }, '-created_date', 2000),
     enabled: !!tenantId,
   });
 
@@ -98,6 +105,12 @@ export default function Analytics() {
         groupInquiries={filteredInquiries}
         prevGroupInquiries={[]}
       />
+
+      {/* Divider */}
+      <div className="border-t border-gray-100" />
+
+      {/* Section 1b – Invoice Finance */}
+      <InvoiceFinanceSection invoices={allInvoices} bookings={allBookings} tenantId={tenantId} />
 
       {/* Divider */}
       <div className="border-t border-gray-100" />
