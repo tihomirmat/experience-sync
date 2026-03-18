@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
@@ -33,6 +34,15 @@ const navItems = [
 
 function SidebarContent({ currentPageName, onClose }) {
   const { currentTenant, tenants, switchTenant } = useTenant();
+
+  const { data: unpaidInvoices = [] } = useQuery({
+    queryKey: ['nav-unpaid-invoices', currentTenant?.id],
+    queryFn: () => base44.entities.Invoice.filter({ tenant_id: currentTenant.id }),
+    enabled: !!currentTenant?.id,
+    select: (data) => data.filter(i => i.status === 'sent' || i.status === 'draft'),
+    staleTime: 60000,
+  });
+  const unpaidCount = unpaidInvoices.length;
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-100">
