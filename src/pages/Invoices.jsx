@@ -231,20 +231,45 @@ export default function Invoices() {
         </Button>
       </PageHeader>
 
-      <Tabs value={statusFilter} onValueChange={setStatusFilter} className="mb-6">
-        <TabsList className="bg-gray-100/70">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
-          <TabsTrigger value="sent">Sent</TabsTrigger>
-          <TabsTrigger value="paid">Paid</TabsTrigger>
-          <TabsTrigger value="void">Void</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+          <TabsList className="bg-gray-100/70">
+            <TabsTrigger value="all">Vsi</TabsTrigger>
+            <TabsTrigger value="draft">Osnutek</TabsTrigger>
+            <TabsTrigger value="sent">Poslano</TabsTrigger>
+            <TabsTrigger value="paid">Plačano</TabsTrigger>
+            <TabsTrigger value="void">Storno</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Select value={channelFilter} onValueChange={setChannelFilter}>
+          <SelectTrigger className="w-36 h-9"><SelectValue placeholder="Kanal" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Vsi kanali</SelectItem>
+            <SelectItem value="direct">Direct</SelectItem>
+            <SelectItem value="airbnb">Airbnb</SelectItem>
+            <SelectItem value="gyg">GetYourGuide</SelectItem>
+            <SelectItem value="bookingcom">Booking.com</SelectItem>
+            <SelectItem value="dmo">DMO</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {invoices.length === 0 && !isLoading ? (
         <EmptyState icon={FileText} title="No invoices" description="Create invoices from bookings or manually." actionLabel="New Invoice" onAction={openCreate} />
       ) : (
-        <DataTable columns={columns} data={filtered} isLoading={isLoading} />
+        <>
+          <DataTable columns={columns} data={filtered} isLoading={isLoading} />
+          {/* Summary row */}
+          {!isLoading && filtered.length > 0 && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 grid grid-cols-2 sm:grid-cols-5 gap-4 text-sm">
+              <div><p className="text-xs text-gray-400">Skupaj neto</p><p className="font-semibold">€{summaryTotals.net.toFixed(2)}</p></div>
+              <div><p className="text-xs text-gray-400">Skupaj DDV</p><p className="font-semibold">€{summaryTotals.vat.toFixed(2)}</p></div>
+              <div><p className="text-xs text-gray-400">Skupaj bruto</p><p className="font-semibold">€{summaryTotals.gross.toFixed(2)}</p></div>
+              <div><p className="text-xs text-gray-400">Plačano</p><p className="font-semibold text-[#1a5c38]">€{summaryTotals.paid.toFixed(2)}</p></div>
+              <div><p className="text-xs text-gray-400">Neporavnano</p><p className="font-semibold text-amber-600">€{summaryTotals.unpaid.toFixed(2)}</p></div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Invoice Provider Actions Panel */}
