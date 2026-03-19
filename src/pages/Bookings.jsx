@@ -13,7 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Inbox, FileText, Users, ExternalLink } from 'lucide-react';
+import { Plus, Search, Inbox, FileText, Users, ExternalLink, Mail } from 'lucide-react';
+import EmailCompose from '../components/email/EmailCompose';
 import { format, addDays } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
