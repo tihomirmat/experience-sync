@@ -7,7 +7,7 @@ import { TenantProvider, useTenant } from './components/shared/TenantContext';
 import { 
   LayoutDashboard, Map, Calendar, Inbox, Users, Building2, 
   FileText, Handshake, Globe, Activity, BarChart3, Settings,
-  ChevronDown, Menu, X, LogOut, Bell, Plug
+  ChevronDown, Menu, X, LogOut, Bell, Plug, Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
