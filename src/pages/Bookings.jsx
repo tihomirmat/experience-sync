@@ -31,6 +31,7 @@ export default function Bookings() {
   const [form, setForm] = useState({});
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
   const [invoiceForm, setInvoiceForm] = useState({});
+  const [showEmailCompose, setShowEmailCompose] = useState(false);
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ['bookings', tenantId],
