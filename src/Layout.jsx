@@ -45,6 +45,14 @@ function SidebarContent({ currentPageName, onClose }) {
   });
   const unpaidCount = unpaidInvoices.length;
 
+  const { data: unreadEmails = [] } = useQuery({
+    queryKey: ['nav-unread-emails', currentTenant?.id],
+    queryFn: () => base44.entities.EmailMessage.filter({ tenant_id: currentTenant.id, status: 'received' }),
+    enabled: !!currentTenant?.id,
+    staleTime: 60000,
+  });
+  const unreadEmailCount = unreadEmails.length;
+
   return (
     <div className="flex flex-col h-full bg-white border-r border-gray-100">
       {/* Brand */}
