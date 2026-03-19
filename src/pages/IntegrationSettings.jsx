@@ -258,6 +258,18 @@ export default function IntegrationSettings() {
               ))}
             </div>
           </TabsContent>
+
+          <TabsContent value="email">
+            <EmailSettingsTab tenantId={tenantId} />
+          </TabsContent>
+
+          <TabsContent value="templates">
+            <EmailTemplatesTab tenantId={tenantId} />
+          </TabsContent>
+
+          <TabsContent value="sequences">
+            <EmailSequencesTab tenantId={tenantId} />
+          </TabsContent>
         </Tabs>
       )}
 
