@@ -120,11 +120,14 @@ export default function IntegrationSettings() {
 
       {currentTenant && (
         <Tabs defaultValue="company">
-          <TabsList className="bg-gray-100/70 mb-6">
+          <TabsList className="bg-gray-100/70 mb-6 flex-wrap">
             <TabsTrigger value="company">Company</TabsTrigger>
             <TabsTrigger value="hub">Hub Connection</TabsTrigger>
             <TabsTrigger value="invoicing">Invoicing</TabsTrigger>
             <TabsTrigger value="providers">Invoicing Providers</TabsTrigger>
+            <TabsTrigger value="email">Email nastavitve</TabsTrigger>
+            <TabsTrigger value="templates">Email predloge</TabsTrigger>
+            <TabsTrigger value="sequences">Email sekvence</TabsTrigger>
           </TabsList>
 
           {/* Company Settings */}
