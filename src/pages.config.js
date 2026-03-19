@@ -62,6 +62,7 @@ import Partners from './pages/Partners';
 import Reports from './pages/Reports';
 import Analytics from './pages/Analytics.jsx';
 import Integrations from './pages/Integrations.jsx';
+import Email from './pages/Email.jsx';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "Reports": Reports,
     "Analytics": Analytics,
     "Integrations": Integrations,
+    "Email": Email,
 }
 
 export const pagesConfig = {
