@@ -21,6 +21,7 @@ const navItems = [
   { name: 'Bookings', icon: Inbox, page: 'Bookings' },
   { name: 'Customers', icon: Users, page: 'Customers' },
   { name: 'Companies', icon: Building2, page: 'Companies' },
+  { name: 'Email', icon: Mail, page: 'Email' },
   { name: 'Invoices', icon: FileText, page: 'Invoices' },
   { name: 'Agencije & Skupine', icon: Users, page: 'Groups' },
   { name: 'Partners', icon: Handshake, page: 'Partners' },
