@@ -246,6 +246,32 @@ export default function Bookings() {
                   </Select>
                 </div>
 
+                {/* Email Section */}
+                <div className="border-t pt-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">📧 Email</p>
+                  {showEmailCompose ? (
+                    <div className="border rounded-lg overflow-hidden" style={{ height: 420 }}>
+                      <EmailCompose
+                        tenantId={tenantId}
+                        initialTo={selectedBooking.customer_email || ''}
+                        initialSubject={`Vaša rezervacija: ${selectedBooking.experience_title || ''}`}
+                        contextData={{
+                          customer_id: selectedBooking.customer_id,
+                          booking_id: selectedBooking.id,
+                          customer_name: selectedBooking.customer_name,
+                          experience_title: selectedBooking.experience_title,
+                          date: selectedBooking.departure_date,
+                        }}
+                        onClose={() => setShowEmailCompose(false)}
+                      />
+                    </div>
+                  ) : (
+                    <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowEmailCompose(true)}>
+                      <Mail className="w-3.5 h-3.5" /> Pošlji email gostu
+                    </Button>
+                  )}
+                </div>
+
                 {/* Invoice Section */}
                 <div className="border-t pt-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">🧾 Račun</p>
