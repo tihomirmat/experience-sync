@@ -16,6 +16,9 @@ import { Badge } from '@/components/ui/badge';
 import { Settings, Building2, Link2, Mail, FileText, Plus, Save, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import ProviderConnectionCard from '../components/invoicing/ProviderConnectionCard';
+import EmailSettingsTab from '../components/email/EmailSettingsTab';
+import EmailTemplatesTab from '../components/email/EmailTemplatesTab';
+import EmailSequencesTab from '../components/email/EmailSequencesTab';
 
 export default function IntegrationSettings() {
   const { currentTenant, tenants, refreshTenants } = useTenant();
