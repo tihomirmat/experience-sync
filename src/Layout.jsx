@@ -114,6 +114,11 @@ function SidebarContent({ currentPageName, onClose }) {
                   {unpaidCount}
                 </span>
               )}
+              {item.page === 'Email' && unreadEmailCount > 0 && (
+                <span className="ml-auto text-xs bg-blue-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
+                  {unreadEmailCount}
+                </span>
+              )}
             </Link>
           );
         })}
