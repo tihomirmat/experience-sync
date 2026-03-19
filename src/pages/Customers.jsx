@@ -10,7 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Plus, Search, Users, Mail, Phone } from 'lucide-react';
+import CustomerEmailTab from '../components/customers/CustomerEmailTab';
+import CustomerSequencesTab from '../components/customers/CustomerSequencesTab';
+import CustomerExtendedProfile from '../components/customers/CustomerExtendedProfile';
 
 export default function Customers() {
   const { currentTenant } = useTenant();
@@ -18,6 +22,7 @@ export default function Customers() {
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({});
 
@@ -28,14 +33,14 @@ export default function Customers() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: (data) => editing 
+    mutationFn: (data) => editing
       ? base44.entities.Customer.update(editing.id, data)
       : base44.entities.Customer.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['customers'] }); setShowForm(false); setEditing(null); },
   });
 
   const openCreate = () => { setForm({ tenant_id: tenantId }); setEditing(null); setShowForm(true); };
-  const openEdit = (c) => { setForm({...c}); setEditing(c); setShowForm(true); };
+  const openEdit = (c) => { setEditing(c); setSelectedCustomer(c); };
 
   const filtered = customers.filter(c =>
     !search || c.name?.toLowerCase().includes(search.toLowerCase()) || c.email?.toLowerCase().includes(search.toLowerCase())
@@ -79,6 +84,7 @@ export default function Customers() {
         <DataTable columns={columns} data={filtered} isLoading={isLoading} onRowClick={openEdit} />
       )}
 
+      {/* Create/Edit Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent>
           <DialogHeader><DialogTitle>{editing ? 'Edit Customer' : 'New Customer'}</DialogTitle></DialogHeader>
@@ -102,6 +108,60 @@ export default function Customers() {
               {editing ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Customer Detail Panel */}
+      <Dialog open={!!selectedCustomer} onOpenChange={v => !v && setSelectedCustomer(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              {selectedCustomer?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedCustomer && (
+            <Tabs defaultValue="profile">
+              <TabsList className="bg-gray-100/70 mb-4">
+                <TabsTrigger value="profile">Profil</TabsTrigger>
+                <TabsTrigger value="crm">CRM razširitev</TabsTrigger>
+                <TabsTrigger value="email">Email</TabsTrigger>
+                <TabsTrigger value="sequences">Sekvence</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="profile">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div><p className="text-xs text-gray-400">Ime</p><p className="font-medium">{selectedCustomer.name}</p></div>
+                    <div><p className="text-xs text-gray-400">Email</p><p>{selectedCustomer.email || '—'}</p></div>
+                    <div><p className="text-xs text-gray-400">Telefon</p><p>{selectedCustomer.phone || '—'}</p></div>
+                    <div><p className="text-xs text-gray-400">Rezervacije</p><p>{selectedCustomer.total_bookings || 0}</p></div>
+                    <div><p className="text-xs text-gray-400">Skupaj prihodek</p><p className="font-medium">€{(selectedCustomer.total_revenue || 0).toFixed(2)}</p></div>
+                    <div><p className="text-xs text-gray-400">Marketing</p><p>{selectedCustomer.marketing_opt_in ? '✅ Da' : '✗ Ne'}</p></div>
+                  </div>
+                  <Button size="sm" variant="outline" className="gap-1" onClick={() => {
+                    setForm({...selectedCustomer});
+                    setEditing(selectedCustomer);
+                    setShowForm(true);
+                  }}>
+                    Uredi osnovno
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="crm">
+                <CustomerExtendedProfile customer={selectedCustomer} tenantId={tenantId} />
+              </TabsContent>
+
+              <TabsContent value="email">
+                <CustomerEmailTab customer={selectedCustomer} tenantId={tenantId} />
+              </TabsContent>
+
+              <TabsContent value="sequences">
+                <CustomerSequencesTab customer={selectedCustomer} tenantId={tenantId} />
+              </TabsContent>
+            </Tabs>
+          )}
         </DialogContent>
       </Dialog>
     </div>
