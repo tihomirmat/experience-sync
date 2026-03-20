@@ -179,7 +179,7 @@ export default function OffersTab({ tenantId }) {
               <tr><td colSpan={8} className="px-4 py-12 text-center text-gray-400">Ni ponudb</td></tr>
             )}
             {!isLoading && filtered.map(offer => (
-              <tr key={offer.id} onClick={() => { setSelected(offer); setEditForm({ ...offer }); }} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors">
+              <tr key={offer.id} onClick={() => { setSelected(offer); setEditForm({ ...offer }); setShowEmailCompose(false); }} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors">
                 <td className="px-4 py-3 font-mono text-xs font-medium text-[#1a5c38]">{offer.offer_number}</td>
                 <td className="px-4 py-3 text-gray-700">{offer.company_name || offer.contact_name}</td>
                 <td className="px-4 py-3 text-gray-700 max-w-[140px] truncate">{offer.experience_title || '—'}</td>
