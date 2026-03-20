@@ -322,9 +322,51 @@ export default function InquiriesTab({ tenantId }) {
                 </Button>
               </div>
 
+              {/* Linked offer */}
+              {linkedOffer && (
+                <div className="border-t pt-4">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Povezana ponudba</p>
+                  <div className="bg-gray-50 rounded-lg p-3 flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-[#1a5c38]" />
+                      <span className="font-mono font-medium text-[#1a5c38]">{linkedOffer.offer_number}</span>
+                    </div>
+                    <Badge variant="outline" className={`text-xs border ${
+                      linkedOffer.status === 'accepted' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' :
+                      linkedOffer.status === 'sent' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                      'bg-gray-100 text-gray-600 border-gray-200'
+                    }`}>
+                      {linkedOffer.status === 'draft' ? 'Osnutek' : linkedOffer.status === 'sent' ? 'Poslano' : linkedOffer.status === 'accepted' ? 'Sprejeto' : linkedOffer.status}
+                    </Badge>
+                  </div>
+                </div>
+              )}
+
               {/* Actions */}
               <div className="border-t pt-4 space-y-2">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Akcije</p>
+                <Button className="w-full gap-2" size="sm" variant="outline"
+                  onClick={() => setShowEmailCompose(v => !v)}>
+                  <Mail className="w-4 h-4" /> {showEmailCompose ? 'Zapri email' : 'Pošlji email'}
+                </Button>
+                {showEmailCompose && (
+                  <div className="border rounded-lg overflow-hidden">
+                    <EmailCompose
+                      tenantId={tenantId}
+                      initialTo={selected.contact_email}
+                      initialSubject={`Re: Povpraševanje – ${selected.experience_title || 'doživetje'}`}
+                      contextData={{
+                        customer_name: selected.contact_name,
+                        customer_email: selected.contact_email,
+                        experience_title: selected.experience_title,
+                        inquiry_id: selected.id,
+                        company_name: selected.company_name,
+                      }}
+                      onClose={() => setShowEmailCompose(false)}
+                      onSent={() => setShowEmailCompose(false)}
+                    />
+                  </div>
+                )}
                 {!['confirmed', 'declined'].includes(selected.status) && (
                   <Button className="w-full bg-[#1a5c38] hover:bg-[#154d2f]" size="sm"
                     onClick={() => createOfferMutation.mutate(selected)} disabled={createOfferMutation.isPending}>
