@@ -162,7 +162,7 @@ export default function InquiriesTab({ tenantId }) {
               <tr><td colSpan={8} className="px-4 py-12 text-center text-gray-400">Ni poizvedb</td></tr>
             )}
             {!isLoading && filtered.map(inq => (
-              <tr key={inq.id} onClick={() => setSelected(inq)} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors">
+              <tr key={inq.id} onClick={() => { setSelected(inq); setShowEmailCompose(false); }} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors">
                 <td className="px-4 py-3 text-gray-500 text-xs">{inq.created_date ? format(new Date(inq.created_date), 'dd.MM.yyyy') : '—'}</td>
                 <td className="px-4 py-3">
                   <p className="font-medium text-gray-900">{inq.contact_name}</p>
