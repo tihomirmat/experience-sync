@@ -130,15 +130,6 @@ export default function OffersTab({ tenantId }) {
     win.document.close();
   };
 
-  const openEmail = (offer) => {
-    const subject = encodeURIComponent(`Ponudba za zasebno skupino ${offer.offer_number}`);
-    const body = encodeURIComponent(
-      `Spoštovani ${offer.contact_name},\n\nv prilogi vam pošiljamo ponudbo ${offer.offer_number} za zasebno skupino.\n\nDoživetje: ${offer.experience_title}\nDatum: ${offer.proposed_date || '—'}\nŠtevilo oseb: ${offer.group_size}\nSkupna cena: ${offer.total_price} ${offer.currency || 'EUR'}\n\nLep pozdrav`
-    );
-    window.location.href = `mailto:${offer.contact_email}?subject=${subject}&body=${body}`;
-    updateMutation.mutate({ id: offer.id, data: { status: 'sent', sent_at: new Date().toISOString() } });
-  };
-
   const filtered = offers.filter(o => {
     const matchSearch = !search ||
       o.company_name?.toLowerCase().includes(search.toLowerCase()) ||
