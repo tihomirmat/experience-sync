@@ -266,9 +266,32 @@ export default function OffersTab({ tenantId }) {
                 <Button className="w-full gap-2" size="sm" variant="outline" onClick={() => openPdf(editForm)}>
                   <Printer className="w-4 h-4" /> Generiraj PDF
                 </Button>
-                <Button className="w-full gap-2" size="sm" variant="outline" onClick={() => openEmail(editForm)}>
-                  <Mail className="w-4 h-4" /> Pošlji po emailu
+                <Button className="w-full gap-2" size="sm" variant="outline"
+                  onClick={() => setShowEmailCompose(v => !v)}>
+                  <Mail className="w-4 h-4" /> {showEmailCompose ? 'Zapri email' : 'Pošlji po emailu'}
                 </Button>
+                {showEmailCompose && (
+                  <div className="border rounded-lg overflow-hidden">
+                    <EmailCompose
+                      tenantId={tenantId}
+                      initialTo={editForm.contact_email}
+                      initialSubject={`Ponudba za zasebno skupino ${editForm.offer_number}`}
+                      initialBody={`Spoštovani ${editForm.contact_name},\n\nv prilogi vam pošiljamo ponudbo ${editForm.offer_number} za zasebno skupino.\n\nDoživetje: ${editForm.experience_title}\nDatum: ${editForm.proposed_date || '—'}\nŠtevilo oseb: ${editForm.group_size}\nSkupna cena: ${editForm.total_price} ${editForm.currency || 'EUR'}\n\nLep pozdrav`}
+                      contextData={{
+                        customer_name: editForm.contact_name,
+                        customer_email: editForm.contact_email,
+                        experience_title: editForm.experience_title,
+                        offer_number: editForm.offer_number,
+                        company_name: editForm.company_name,
+                      }}
+                      onClose={() => {
+                        setShowEmailCompose(false);
+                        updateMutation.mutate({ id: selected.id, data: { status: 'sent', sent_at: new Date().toISOString() } });
+                      }}
+                      onSent={() => setShowEmailCompose(false)}
+                    />
+                  </div>
+                )}
                 {selected.status !== 'accepted' && (
                   <Button className="w-full bg-emerald-600 hover:bg-emerald-700" size="sm"
                     onClick={() => acceptMutation.mutate(selected)} disabled={acceptMutation.isPending}>
