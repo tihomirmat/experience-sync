@@ -8,8 +8,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Plus, Search, Users, Calendar, Clock } from 'lucide-react';
+import { Plus, Search, Users, Mail, FileText } from 'lucide-react';
 import { format } from 'date-fns';
+import EmailCompose from '@/components/email/EmailCompose';
 
 const STATUS_COLORS = {
   new: 'bg-blue-100 text-blue-700 border-blue-200',
