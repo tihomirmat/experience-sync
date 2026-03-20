@@ -27,8 +27,10 @@ const STATUS_LABELS = {
 export default function OffersTab({ tenantId }) {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selected, setSelected] = useState(null);
   const [editForm, setEditForm] = useState(null);
+  const [showEmailCompose, setShowEmailCompose] = useState(false);
 
   const { data: offers = [], isLoading } = useQuery({
     queryKey: ['group-offers', tenantId],

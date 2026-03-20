@@ -43,6 +43,7 @@ export default function InquiriesTab({ tenantId }) {
   const [selected, setSelected] = useState(null);
   const [form, setForm] = useState({ ...EMPTY_FORM });
   const [internalNote, setInternalNote] = useState('');
+  const [showEmailCompose, setShowEmailCompose] = useState(false);
 
   const { data: inquiries = [], isLoading } = useQuery({
     queryKey: ['group-inquiries', tenantId],
