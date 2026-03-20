@@ -153,6 +153,8 @@ export default function Invoices() {
     });
   };
 
+  const bookingMap = bookings.reduce((m, b) => { m[b.id] = b; return m; }, {});
+
   const filtered = invoices.filter(i => {
     const matchStatus = statusFilter === 'all' || i.status === statusFilter;
     const matchSearch = !search || i.invoice_number?.toLowerCase().includes(search.toLowerCase()) || i.customer_name?.toLowerCase().includes(search.toLowerCase()) || i.company_name?.toLowerCase().includes(search.toLowerCase());
@@ -160,8 +162,6 @@ export default function Invoices() {
     const matchChannel = channelFilter === 'all' || booking?.channel === channelFilter;
     return matchStatus && matchSearch && matchChannel;
   });
-
-  const bookingMap = bookings.reduce((m, b) => { m[b.id] = b; return m; }, {});
 
   // Summary totals for filtered invoices
   const summaryTotals = filtered.reduce((acc, i) => ({
