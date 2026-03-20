@@ -139,10 +139,14 @@ export default function OffersTab({ tenantId }) {
     updateMutation.mutate({ id: offer.id, data: { status: 'sent', sent_at: new Date().toISOString() } });
   };
 
-  const filtered = offers.filter(o => !search ||
-    o.company_name?.toLowerCase().includes(search.toLowerCase()) ||
-    o.offer_number?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = offers.filter(o => {
+    const matchSearch = !search ||
+      o.company_name?.toLowerCase().includes(search.toLowerCase()) ||
+      o.contact_name?.toLowerCase().includes(search.toLowerCase()) ||
+      o.offer_number?.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || o.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
 
   return (
     <div>
