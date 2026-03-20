@@ -57,6 +57,13 @@ export default function InquiriesTab({ tenantId }) {
     enabled: !!tenantId,
   });
 
+  const { data: linkedOffer } = useQuery({
+    queryKey: ['linked-offer', selected?.offer_id],
+    queryFn: () => base44.entities.GroupOffer.filter({ id: selected.offer_id }),
+    enabled: !!selected?.offer_id,
+    select: data => data[0],
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.GroupInquiry.create({ ...data, tenant_id: tenantId }),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['group-inquiries'] }); setShowNew(false); setForm({ ...EMPTY_FORM }); },
