@@ -71,18 +71,18 @@ export default function OffersTab({ tenantId }) {
         channel: 'direct',
       });
 
-      // 2. Create invoice
+      // 2. Create proforma invoice
       const allTenants = await base44.entities.Tenant.list();
       const t = allTenants.find(t => t.id === tenantId);
       const seq = (t?.invoice_seq_current || 0) + 1;
-      const invNumber = `${t?.invoice_prefix || 'INV-'}${String(seq).padStart(6, '0')}`;
+      const invNumber = `${t?.invoice_prefix || 'PRF-'}${String(seq).padStart(6, '0')}`;
       await base44.entities.Tenant.update(tenantId, { invoice_seq_current: seq });
 
       const today = new Date().toISOString().split('T')[0];
       const invoice = await base44.entities.Invoice.create({
         tenant_id: tenantId,
         invoice_number: invNumber,
-        invoice_type: 'invoice',
+        invoice_type: 'proforma',
         status: 'draft',
         language: 'sl',
         booking_id: booking.id,
