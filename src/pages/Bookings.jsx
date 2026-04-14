@@ -45,6 +45,12 @@ export default function Bookings() {
     enabled: !!tenantId,
   });
 
+  const { data: hubConnections = [] } = useQuery({
+    queryKey: ['hub-connections', tenantId],
+    queryFn: () => base44.entities.HubConnection.filter({ tenant_id: tenantId }),
+    enabled: !!tenantId,
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Booking.create(data),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setShowForm(false); },
@@ -191,21 +197,35 @@ export default function Bookings() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5"><Label>Gross Total (€)</Label>
-                <Input type="number" step="0.01" value={form.gross_total || ''} onChange={e => setForm({...form, gross_total: parseFloat(e.target.value) || 0})} /></div>
+                <Input type="number" step="0.01" value={form.gross_total || ''} onChange={e => {
+                  const gross = parseFloat(e.target.value) || 0;
+                  const rate = form._channelCommissionRate || 0;
+                  setForm({...form, gross_total: gross, commission_total: gross * rate});
+                }} /></div>
               <div className="space-y-1.5"><Label>Channel</Label>
-                <Select value={form.channel || 'direct'} onValueChange={v => setForm({...form, channel: v})}>
+                <Select value={form.channel || 'direct'} onValueChange={v => {
+                  const conn = hubConnections.find(c => c.hub_type === v);
+                  const rate = conn?.commission_rate || 0;
+                  setForm({...form, channel: v, _channelCommissionRate: rate, commission_total: (form.gross_total || 0) * rate});
+                }}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="direct">Direct</SelectItem>
-                    <SelectItem value="airbnb">Airbnb</SelectItem>
-                    <SelectItem value="gyg">GetYourGuide</SelectItem>
-                    <SelectItem value="bookingcom">Booking.com</SelectItem>
-                    <SelectItem value="dmo">DMO</SelectItem>
-                    <SelectItem value="hub_other">Hub Other</SelectItem>
+                    {hubConnections.map(c => (
+                      <SelectItem key={c.id} value={c.hub_type}>
+                        {c.channel_label || c.hub_type}{c.commission_rate ? ` (${(c.commission_rate * 100).toFixed(0)}%)` : ''}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
+            {(form._channelCommissionRate > 0) && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 flex justify-between">
+                <span>Commission ({(form._channelCommissionRate * 100).toFixed(0)}%)</span>
+                <span className="font-semibold">€{(form.commission_total || 0).toFixed(2)}</span>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>

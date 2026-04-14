@@ -7,17 +7,72 @@
     },
     "hub_type": {
       "type": "string",
-      "description": "Hub type: bokun, fareharbor, airbnb_exp, gyg, custom \u2014 extensible"
+      "description": "bokun, fareharbor, viator, getyourguide, booking_experiences, airbnb_experiences, tripadvisor, expedia_experiences, klook, musement, local_agency, hotel_partner, tourist_board, custom_api"
+    },
+    "channel_category": {
+      "type": "string",
+      "enum": [
+        "booking_hub",
+        "ota_platform",
+        "local_partner",
+        "custom"
+      ],
+      "default": "booking_hub"
+    },
+    "channel_label": {
+      "type": "string",
+      "description": "Display name e.g. Viator, GetYourGuide, Hotel Triglav"
+    },
+    "channel_logo_url": {
+      "type": "string"
+    },
+    "sync_direction": {
+      "type": "string",
+      "enum": [
+        "two_way",
+        "inbound_only",
+        "outbound_only",
+        "webhook_only"
+      ],
+      "default": "two_way"
     },
     "api_key_enc": {
-      "type": "string",
-      "description": "Encrypted API key"
+      "type": "string"
     },
     "api_secret_enc": {
-      "type": "string",
-      "description": "Encrypted API secret"
+      "type": "string"
     },
     "base_url": {
+      "type": "string"
+    },
+    "webhook_url": {
+      "type": "string"
+    },
+    "webhook_secret_enc": {
+      "type": "string"
+    },
+    "listing_url": {
+      "type": "string"
+    },
+    "commission_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "setup_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "active",
+        "error",
+        "paused"
+      ],
+      "default": "not_started"
+    },
+    "setup_notes": {
       "type": "string"
     },
     "status": {
