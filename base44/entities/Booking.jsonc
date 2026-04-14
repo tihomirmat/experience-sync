@@ -1,0 +1,127 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "hub_booking_id": {
+      "type": "string"
+    },
+    "hub_type": {
+      "type": "string",
+      "enum": [
+        "bokun",
+        "fareharbor",
+        "direct"
+      ]
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "airbnb",
+        "gyg",
+        "bookingcom",
+        "dmo",
+        "hub_other"
+      ],
+      "default": "direct"
+    },
+    "experience_id": {
+      "type": "string"
+    },
+    "experience_title": {
+      "type": "string"
+    },
+    "departure_id": {
+      "type": "string"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "departure_time": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed",
+        "no_show"
+      ],
+      "default": "pending"
+    },
+    "customer_id": {
+      "type": "string",
+      "description": "FK to Customer - must be set on save"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "customer_country": {
+      "type": "string"
+    },
+    "customer_language": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "adults": {
+      "type": "number",
+      "default": 1
+    },
+    "children": {
+      "type": "number",
+      "default": 0
+    },
+    "total_pax": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "gross_total": {
+      "type": "number"
+    },
+    "net_total": {
+      "type": "number"
+    },
+    "vat_total": {
+      "type": "number"
+    },
+    "commission_total": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "booking_source_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "experience_id",
+    "status"
+  ]
+}

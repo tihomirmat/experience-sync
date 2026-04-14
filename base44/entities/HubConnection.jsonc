@@ -1,0 +1,48 @@
+{
+  "name": "HubConnection",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "hub_type": {
+      "type": "string",
+      "description": "Hub type: bokun, fareharbor, airbnb_exp, gyg, custom \u2014 extensible"
+    },
+    "api_key_enc": {
+      "type": "string",
+      "description": "Encrypted API key"
+    },
+    "api_secret_enc": {
+      "type": "string",
+      "description": "Encrypted API secret"
+    },
+    "base_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "error"
+      ],
+      "default": "active"
+    },
+    "last_sync_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_sync_status": {
+      "type": "string"
+    },
+    "sync_interval_minutes": {
+      "type": "number",
+      "default": 10
+    }
+  },
+  "required": [
+    "tenant_id",
+    "hub_type"
+  ]
+}

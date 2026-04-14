@@ -1,0 +1,65 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "booking_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "stripe",
+        "cash",
+        "bank_transfer",
+        "other"
+      ],
+      "default": "stripe"
+    },
+    "provider_payment_id": {
+      "type": "string",
+      "description": "Stripe charge/PaymentIntent ID"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "succeeded",
+        "failed",
+        "refunded",
+        "partially_refunded"
+      ],
+      "default": "pending"
+    },
+    "refunded_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "failure_reason": {
+      "type": "string"
+    },
+    "metadata_json": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "booking_id"
+  ]
+}

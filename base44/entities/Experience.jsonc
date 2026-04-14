@@ -1,0 +1,149 @@
+{
+  "name": "Experience",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "hub_experience_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "booking_slug": {
+      "type": "string",
+      "description": "URL-safe slug for public booking page, e.g. cheese-wine-tasting"
+    },
+    "title_sl": {
+      "type": "string"
+    },
+    "title_en": {
+      "type": "string"
+    },
+    "title_de": {
+      "type": "string"
+    },
+    "title_hr": {
+      "type": "string"
+    },
+    "short_description_sl": {
+      "type": "string"
+    },
+    "short_description_en": {
+      "type": "string"
+    },
+    "short_description_de": {
+      "type": "string"
+    },
+    "short_description_hr": {
+      "type": "string"
+    },
+    "full_description_sl": {
+      "type": "string"
+    },
+    "full_description_en": {
+      "type": "string"
+    },
+    "full_description_de": {
+      "type": "string"
+    },
+    "full_description_hr": {
+      "type": "string"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "meeting_point_name": {
+      "type": "string"
+    },
+    "meeting_point_address": {
+      "type": "string"
+    },
+    "meeting_point_lat": {
+      "type": "number"
+    },
+    "meeting_point_lng": {
+      "type": "number"
+    },
+    "category_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "base_price_from": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "booking_url_direct": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "cancellation_policy_sl": {
+      "type": "string"
+    },
+    "cancellation_policy_en": {
+      "type": "string"
+    },
+    "cancellation_policy_de": {
+      "type": "string"
+    },
+    "cancellation_policy_hr": {
+      "type": "string"
+    },
+    "includes_sl": {
+      "type": "string"
+    },
+    "includes_en": {
+      "type": "string"
+    },
+    "includes_de": {
+      "type": "string"
+    },
+    "includes_hr": {
+      "type": "string"
+    },
+    "excludes_sl": {
+      "type": "string"
+    },
+    "excludes_en": {
+      "type": "string"
+    },
+    "excludes_de": {
+      "type": "string"
+    },
+    "excludes_hr": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "title_en"
+  ]
+}

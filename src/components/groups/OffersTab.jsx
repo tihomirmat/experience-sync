@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, FileText, Mail, Printer, Plus } from 'lucide-react';
+import { Search, FileText, Mail, Printer, ArrowRight } from 'lucide-react';
 import EmailCompose from '@/components/email/EmailCompose';
 import { format } from 'date-fns';
 
@@ -48,6 +48,9 @@ export default function OffersTab({ tenantId }) {
     mutationFn: ({ id, data }) => base44.entities.GroupOffer.update(id, data),
     onSuccess: (updated) => { queryClient.invalidateQueries({ queryKey: ['group-offers'] }); setSelected(updated); setEditForm(null); },
   });
+
+  const [converting, setConverting] = useState(false);
+  const [overbookingWarning, setOverbookingWarning] = useState(null);
 
   const acceptMutation = useMutation({
     mutationFn: async (offer) => {
@@ -122,6 +125,21 @@ export default function OffersTab({ tenantId }) {
       setSelected(updated);
     },
   });
+
+  const handleConvertToBooking = async (offer) => {
+    setOverbookingWarning(null);
+    // Check departure capacity if departure_id is linked
+    if (offer.departure_id) {
+      try {
+        const dep = await base44.entities.Departure.get(offer.departure_id);
+        if (dep && (dep.capacity_remaining ?? dep.capacity_total) < offer.group_size) {
+          setOverbookingWarning(`⚠️ Opozorilo: Kapaciteta termina je ${dep.capacity_remaining ?? dep.capacity_total} mest, skupina pa ima ${offer.group_size} oseb. Rezervacija bo ustvarila preobremenitev.`);
+        }
+      } catch {}
+    }
+    setConverting(true);
+    acceptMutation.mutate(offer, { onSettled: () => setConverting(false) });
+  };
 
   const openPdf = (offer) => {
     const html = generateOfferHtml(offer, tenant);
@@ -263,6 +281,40 @@ export default function OffersTab({ tenantId }) {
               {/* Actions */}
               <div className="border-t pt-4 space-y-2">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Akcije</p>
+
+                {/* Convert to Booking - prominent for accepted offers without booking */}
+                {selected.status === 'accepted' && !selected.booking_id && (
+                  <div className="space-y-2">
+                    {overbookingWarning && (
+                      <div className="bg-amber-50 border border-amber-300 rounded-lg px-3 py-2 text-xs text-amber-700">
+                        {overbookingWarning}
+                      </div>
+                    )}
+                    <Button
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 gap-2 text-sm font-semibold"
+                      size="sm"
+                      onClick={() => handleConvertToBooking(selected)}
+                      disabled={converting || acceptMutation.isPending}
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                      {converting || acceptMutation.isPending ? 'Ustvarjam rezervacijo...' : 'Pretvori v rezervacijo + proforma'}
+                    </Button>
+                  </div>
+                )}
+
+                {selected.status === 'accepted' && selected.booking_id && (
+                  <div className="space-y-2">
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-sm text-emerald-700">
+                      ✅ Rezervacija ustvarjena
+                    </div>
+                    {selected.invoice_id && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm text-blue-700">
+                        🧾 Proforma ustvarjena
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <Button className="w-full gap-2" size="sm" variant="outline" onClick={() => openPdf(editForm)}>
                   <Printer className="w-4 h-4" /> Generiraj PDF
                 </Button>
@@ -297,18 +349,6 @@ export default function OffersTab({ tenantId }) {
                     onClick={() => acceptMutation.mutate(selected)} disabled={acceptMutation.isPending}>
                     {acceptMutation.isPending ? 'Ustvarjam...' : '✅ Označi kot sprejeto → ustvari rezervacijo + račun'}
                   </Button>
-                )}
-                {selected.status === 'accepted' && selected.booking_id && (
-                  <div className="space-y-2">
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 text-sm text-emerald-700">
-                      ✅ Rezervacija ustvarjena
-                    </div>
-                    {selected.invoice_id && (
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm text-blue-700">
-                        🧾 Račun ustvarjen
-                      </div>
-                    )}
-                  </div>
                 )}
               </div>
 

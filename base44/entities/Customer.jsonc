@@ -1,0 +1,112 @@
+{
+  "name": "Customer",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "marketing_opt_in": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    },
+    "total_bookings": {
+      "type": "number",
+      "default": 0
+    },
+    "total_revenue": {
+      "type": "number",
+      "default": 0
+    },
+    "gdpr_export_requested": {
+      "type": "boolean",
+      "default": false
+    },
+    "gdpr_retention_flag": {
+      "type": "boolean",
+      "default": false
+    },
+    "birthdate": {
+      "type": "string",
+      "format": "date"
+    },
+    "country": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "sl",
+        "en",
+        "de",
+        "it",
+        "fr",
+        "hr",
+        "other"
+      ],
+      "default": "en"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "airbnb",
+        "gyg",
+        "booking",
+        "referral",
+        "walk_in",
+        "other"
+      ],
+      "default": "direct"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allergies": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "regular",
+        "vip",
+        "agency",
+        "one_time"
+      ],
+      "default": "regular"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_followup_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "lifetime_value": {
+      "type": "number",
+      "default": 0
+    },
+    "acquisition_channel": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "name"
+  ]
+}
