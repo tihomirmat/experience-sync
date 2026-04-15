@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { useTenant } from '../components/shared/TenantContext';
 import EmailFolderList from '../components/email/EmailFolderList';
 import EmailList from '../components/email/EmailList';
@@ -64,7 +65,13 @@ export default function Email() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-56px)] -m-4 lg:-m-8 overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-56px)] -m-4 lg:-m-8 overflow-hidden">
+      {/* Sequences promo bar */}
+      <div className="shrink-0 bg-[#1a5c38]/5 border-b border-[#1a5c38]/10 px-4 py-2 flex items-center justify-between">
+        <p className="text-xs text-gray-600">📬 Avtomatske email sekvence po rezervaciji</p>
+        <Link to="/EmailSequences" className="text-xs font-medium text-[#1a5c38] hover:underline">Upravljaj sekvence →</Link>
+      </div>
+    <div className="flex flex-1 overflow-hidden">
       {/* Left: Folders */}
       <div className="w-[200px] shrink-0 border-r border-gray-100 bg-white overflow-y-auto">
         <EmailFolderList
@@ -111,6 +118,7 @@ export default function Email() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }
