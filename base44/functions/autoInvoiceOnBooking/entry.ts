@@ -99,7 +99,13 @@ Deno.serve(async (req) => {
   let issued = false;
   if (autoIssue && providerId) {
     try {
-      await base44.functions.invoke('issueInvoice', { invoice_id: invoice.id, provider_id: providerId });
+      // Pass the shared internal secret so issueInvoice accepts this unattended
+      // (no-user) call. Set INTERNAL_FN_SECRET as a Base44 env var on both functions.
+      await base44.functions.invoke('issueInvoice', {
+        invoice_id: invoice.id,
+        provider_id: providerId,
+        internal_token: Deno.env.get('INTERNAL_FN_SECRET'),
+      });
       issued = true;
       console.log(`[autoInvoiceOnBooking] Auto-issued ${invNumber} via ${providerId}`);
     } catch (e) {

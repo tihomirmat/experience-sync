@@ -131,20 +131,30 @@ async function issueViaCebelca(invoice, connection, settings, creds) {
 
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
-  const user = await base44.auth.me();
-  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { invoice_id, provider_id } = await req.json();
+  const { invoice_id, provider_id, internal_token } = await req.json();
   if (!invoice_id || !provider_id) return Response.json({ error: 'invoice_id and provider_id required' }, { status: 400 });
 
+  // Allow two callers:
+  //  - an authenticated user (manual "issue" from the UI), or
+  //  - an internal automation (autoInvoiceOnBooking) presenting INTERNAL_FN_SECRET.
+  // The secret is a server-only env var, so external callers cannot forge it.
+  const user = await base44.auth.me().catch(() => null);
+  const internalSecret = Deno.env.get('INTERNAL_FN_SECRET');
+  const isInternal = !!internalSecret && internal_token === internalSecret;
+  if (!user && !isInternal) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+  // Internal calls have no user, so use the service-role client for entity access.
+  const db = isInternal ? base44.asServiceRole : base44;
+
   // Idempotency: return existing if already issued
-  const existing = await base44.entities.ExternalDocument.filter({ invoice_id, provider_id });
+  const existing = await db.entities.ExternalDocument.filter({ invoice_id, provider_id });
   if (existing?.length > 0) return Response.json({ external_document: existing[0], already_exists: true });
 
-  const invoice = await base44.entities.Invoice.get(invoice_id);
+  const invoice = await db.entities.Invoice.get(invoice_id);
   if (!invoice) return Response.json({ error: 'Invoice not found' }, { status: 404 });
 
-  const connections = await base44.entities.InvoicingConnection.filter({ tenant_id: invoice.tenant_id, provider_id });
+  const connections = await db.entities.InvoicingConnection.filter({ tenant_id: invoice.tenant_id, provider_id });
   const connection = connections?.[0];
   if (!connection) return Response.json({ error: `No ${provider_id} connection configured` }, { status: 400 });
 
@@ -162,7 +172,7 @@ Deno.serve(async (req) => {
     return Response.json({ error: 'Unknown provider' }, { status: 400 });
   }
 
-  const extDoc = await base44.entities.ExternalDocument.create({
+  const extDoc = await db.entities.ExternalDocument.create({
     tenant_id: invoice.tenant_id,
     invoice_id,
     provider_id,
@@ -170,7 +180,7 @@ Deno.serve(async (req) => {
     ...result,
   });
 
-  await base44.entities.ProviderEvent.create({
+  await db.entities.ProviderEvent.create({
     tenant_id: invoice.tenant_id,
     invoice_id,
     external_document_id: extDoc.id,

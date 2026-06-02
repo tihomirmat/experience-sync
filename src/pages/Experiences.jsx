@@ -207,6 +207,13 @@ export default function Experiences() {
               <Input value={form.booking_url_direct || ''} onChange={e => setForm({...form, booking_url_direct: e.target.value})} placeholder="https://..." />
             </div>
 
+            {/* Channel mapping — links this experience to its listing on a hub/OTA */}
+            <div className="col-span-2 space-y-1.5">
+              <Label>Hub / OTA listing ID</Label>
+              <Input value={form.hub_experience_id || ''} onChange={e => setForm({...form, hub_experience_id: e.target.value})} placeholder="e.g. FareHarbor item pk or Bokun product id" />
+              <p className="text-[11px] text-gray-400">Required for inbound booking sync — bookings from the channel are matched to this experience by this ID.</p>
+            </div>
+
             {/* Includes / Excludes */}
             <div className="col-span-2 sm:col-span-1 space-y-1.5">
               <Label>Includes (EN)</Label>

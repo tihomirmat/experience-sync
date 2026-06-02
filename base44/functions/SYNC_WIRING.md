@@ -42,10 +42,12 @@ credits if done via the settings UI rather than the Builder AI.
 - Enable per tenant by setting on the `InvoicingConnection.settings_json`:
   - `{ "auto_invoice": true }` → auto-create **draft** invoices.
   - add `"auto_issue": true` → also push to the fiscal provider (Quibi/Čebelca).
-- `auto_issue` calls `issueInvoice`, which today requires an authenticated user.
-  To run it unattended, allow service-role invocation in `issueInvoice`
-  (skip the `auth.me()` gate when called by an automation). Leave `auto_issue`
-  off until you've tested issuance manually — fiscalization is legally binding.
+- `auto_issue` calls `issueInvoice`. Unattended issuance is now supported via a
+  shared secret: set a Base44 **env var `INTERNAL_FN_SECRET`** (any long random
+  string) available to both `issueInvoice` and `autoInvoiceOnBooking`. Without
+  it, auto-issue is rejected and the invoice simply stays a draft. Leave
+  `auto_issue` off until you've tested issuance manually — fiscalization is
+  legally binding.
 
 ## Required data mapping (one-time, per listing)
 For inbound bookings to attach to the right product, set on each `Experience`:

@@ -39,7 +39,6 @@ const SETUP_STEPS = {
 
 export default function ChannelConnectPanel({ channel, connection, tenantId, onSave, onDelete, onClose }) {
   const isConnected = !!connection && connection.setup_status === 'active';
-  const webhookUrl = `https://experience-ops.base44.app/api/webhook/${tenantId}`;
 
   const [form, setForm] = useState({
     api_key_enc: '',
@@ -48,7 +47,20 @@ export default function ChannelConnectPanel({ channel, connection, tenantId, onS
     sync_direction: channel?.sync_direction || 'two_way',
     channel_label: channel?.name || '',
     base_url: '',
+    webhook_secret_enc: '',
   });
+
+  // Copy-paste ready webhook URL for the inboundBookingWebhook function:
+  // includes the source (hub_type) and the shared secret the function validates.
+  const webhookUrl = `https://experience-ops.base44.app/api/webhook/${tenantId}`
+    + `?source=${channel?.hub_type || 'custom'}`
+    + (form.webhook_secret_enc ? `&secret=${form.webhook_secret_enc}` : '');
+
+  const generateSecret = () => {
+    const s = (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, '');
+    setForm(f => ({ ...f, webhook_secret_enc: s }));
+    toast.success('Webhook secret generated — save to apply');
+  };
 
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -62,6 +74,7 @@ export default function ChannelConnectPanel({ channel, connection, tenantId, onS
         sync_direction: connection.sync_direction || channel?.sync_direction || 'two_way',
         channel_label: connection.channel_label || channel?.name || '',
         base_url: connection.base_url || '',
+        webhook_secret_enc: connection.webhook_secret_enc || '',
       });
     }
   }, [connection]);
@@ -80,6 +93,8 @@ export default function ChannelConnectPanel({ channel, connection, tenantId, onS
       commission_rate: parseFloat(form.commission_rate) || 0,
       sync_direction: form.sync_direction,
       base_url: form.base_url,
+      webhook_secret_enc: form.webhook_secret_enc,
+      webhook_url: webhookUrl,
       setup_status: 'active',
       status: 'active',
     };
@@ -164,6 +179,23 @@ export default function ChannelConnectPanel({ channel, connection, tenantId, onS
                 <Copy className="w-3.5 h-3.5" />
               </Button>
             </div>
+          </div>
+
+          {/* Webhook Secret — validates inbound webhook calls */}
+          <div>
+            <Label className="text-xs text-gray-500 uppercase tracking-wide">Webhook Secret</Label>
+            <div className="flex gap-2 mt-1.5">
+              <Input
+                className="flex-1 font-mono text-xs"
+                value={form.webhook_secret_enc}
+                onChange={e => setForm(f => ({ ...f, webhook_secret_enc: e.target.value }))}
+                placeholder="Generate or paste a shared secret"
+              />
+              <Button variant="outline" size="sm" className="shrink-0 h-9 text-xs" onClick={generateSecret}>
+                Generate
+              </Button>
+            </div>
+            <p className="text-[11px] text-gray-400 mt-1">Incoming bookings must include this secret. It's embedded in the webhook URL above.</p>
           </div>
 
           {/* Form fields */}
