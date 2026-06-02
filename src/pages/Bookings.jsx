@@ -115,16 +115,16 @@ export default function Bookings() {
   });
 
   const columns = [
-    { header: 'Customer', render: (row) => (
+    { header: 'Stranka', render: (row) => (
       <div>
         <p className="font-medium text-gray-900">{row.customer_name || 'Guest'}</p>
         <p className="text-xs text-gray-400">{row.customer_email || ''}</p>
       </div>
     )},
-    { header: 'Experience', render: (row) => (
+    { header: 'Doživetje', render: (row) => (
       <span className="text-sm">{row.experience_title || '—'}</span>
     )},
-    { header: 'Date', render: (row) => (
+    { header: 'Datum', render: (row) => (
       <span className="text-sm text-gray-600">
         {row.departure_date ? format(new Date(row.departure_date), 'MMM d, yyyy') : '—'}
         {row.departure_time ? ` · ${row.departure_time}` : ''}
@@ -136,10 +136,10 @@ export default function Bookings() {
         <span>{row.total_pax || ((row.adults || 0) + (row.children || 0))}</span>
       </div>
     )},
-    { header: 'Channel', render: (row) => (
+    { header: 'Kanal', render: (row) => (
       <Badge variant="outline" className="text-xs capitalize">{row.channel || 'direct'}</Badge>
     )},
-    { header: 'Total', render: (row) => (
+    { header: 'Skupaj', render: (row) => (
       <span className="font-medium">€{(row.gross_total || 0).toFixed(2)}</span>
     )},
     { header: 'Status', render: (row) => <StatusBadge status={row.status} /> },
@@ -149,16 +149,16 @@ export default function Bookings() {
 
   return (
     <div>
-      <PageHeader title="Bookings" subtitle={`${bookings.length} total bookings`}>
+      <PageHeader title="Rezervacije" subtitle={`Skupaj ${bookings.length} rezervacij`}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
+          <Input placeholder="Iskanje..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={() => {
           setForm({ tenant_id: tenantId, status: 'pending', channel: 'direct', currency: 'EUR', adults: 1, children: 0 });
           setShowForm(true);
         }} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> New Booking
+          <Plus className="w-4 h-4" /> Nova rezervacija
         </Button>
       </PageHeader>
 
@@ -167,24 +167,24 @@ export default function Bookings() {
         title="Kako deluje stran Rezervacije"
         intro="Tukaj so vse rezervacije — ročne in tiste, ki se samodejno uvozijo iz povezanih kanalov."
         steps={[
-          'Kliknite „New Booking", izberite doživetje, vpišite stranko in znesek.',
-          'Ko je rezervacija „confirmed", se prosta mesta samodejno posodobijo na vseh kanalih.',
+          'Kliknite „Nova rezervacija", izberite doživetje, vpišite stranko in znesek.',
+          'Ko je rezervacija potrjena, se prosta mesta samodejno posodobijo na vseh kanalih.',
           'Račun ustvarite z enim klikom v podrobnostih rezervacije.',
         ]}
       />
 
       <Tabs value={statusFilter} onValueChange={setStatusFilter} className="mb-6">
         <TabsList className="bg-gray-100/70">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="confirmed">Confirmed</TabsTrigger>
-          <TabsTrigger value="completed">Completed</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+          <TabsTrigger value="all">Vse</TabsTrigger>
+          <TabsTrigger value="pending">V čakanju</TabsTrigger>
+          <TabsTrigger value="confirmed">Potrjene</TabsTrigger>
+          <TabsTrigger value="completed">Zaključene</TabsTrigger>
+          <TabsTrigger value="cancelled">Preklicane</TabsTrigger>
         </TabsList>
       </Tabs>
 
       {bookings.length === 0 && !isLoading ? (
-        <EmptyState icon={Inbox} title="No bookings yet" description="Bookings will appear here when synced from your hub or created manually." />
+        <EmptyState icon={Inbox} title="Še ni rezervacij" description="Rezervacije se prikažejo tukaj, ko se uvozijo iz kanala ali jih dodate ročno." actionLabel="Nova rezervacija" onAction={() => { setForm({ tenant_id: tenantId, status: 'pending', channel: 'direct', currency: 'EUR', adults: 1, children: 0 }); setShowForm(true); }} />
       ) : (
         <DataTable columns={columns} data={filtered} isLoading={isLoading} onRowClick={setSelectedBooking} />
       )}
@@ -192,42 +192,42 @@ export default function Bookings() {
       {/* Create Booking Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>New Booking</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Nova rezervacija</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <Label>Experience</Label>
+              <Label>Doživetje</Label>
               <Select value={form.experience_id || ''} onValueChange={v => {
                 const exp = experiences.find(e => e.id === v);
                 setForm({...form, experience_id: v, experience_title: exp?.title_en || exp?.title_sl || ''});
               }}>
-                <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Izberi..." /></SelectTrigger>
                 <SelectContent>
                   {experiences.map(e => <SelectItem key={e.id} value={e.id}>{e.title_en || e.title_sl}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5"><Label>Customer Name</Label>
+              <div className="space-y-1.5"><Label>Ime stranke</Label>
                 <Input value={form.customer_name || ''} onChange={e => setForm({...form, customer_name: e.target.value})} /></div>
-              <div className="space-y-1.5"><Label>Email</Label>
+              <div className="space-y-1.5"><Label>E-pošta</Label>
                 <Input value={form.customer_email || ''} onChange={e => setForm({...form, customer_email: e.target.value})} /></div>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-1.5"><Label>Date</Label>
+              <div className="space-y-1.5"><Label>Datum</Label>
                 <Input type="date" value={form.departure_date || ''} onChange={e => setForm({...form, departure_date: e.target.value})} /></div>
-              <div className="space-y-1.5"><Label>Adults</Label>
+              <div className="space-y-1.5"><Label>Odrasli</Label>
                 <Input type="number" value={form.adults || ''} onChange={e => setForm({...form, adults: parseInt(e.target.value) || 0, total_pax: (parseInt(e.target.value) || 0) + (form.children || 0)})} /></div>
-              <div className="space-y-1.5"><Label>Children</Label>
+              <div className="space-y-1.5"><Label>Otroci</Label>
                 <Input type="number" value={form.children || ''} onChange={e => setForm({...form, children: parseInt(e.target.value) || 0, total_pax: (form.adults || 0) + (parseInt(e.target.value) || 0)})} /></div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5"><Label>Gross Total (€)</Label>
+              <div className="space-y-1.5"><Label>Skupaj z DDV (€)</Label>
                 <Input type="number" step="0.01" value={form.gross_total || ''} onChange={e => {
                   const gross = parseFloat(e.target.value) || 0;
                   const rate = form._channelCommissionRate || 0;
                   setForm({...form, gross_total: gross, commission_total: gross * rate});
                 }} /></div>
-              <div className="space-y-1.5"><Label>Channel</Label>
+              <div className="space-y-1.5"><Label>Kanal</Label>
                 <Select value={form.channel || 'direct'} onValueChange={v => {
                   const conn = hubConnections.find(c => c.hub_type === v);
                   const rate = conn?.commission_rate || 0;
@@ -253,8 +253,8 @@ export default function Bookings() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-            <Button onClick={() => createMutation.mutate(form)} disabled={createMutation.isPending}>Create</Button>
+            <Button variant="outline" onClick={() => setShowForm(false)}>Prekliči</Button>
+            <Button onClick={() => createMutation.mutate(form)} disabled={createMutation.isPending}>Ustvari</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -86,7 +86,7 @@ export default function Partners() {
 
   return (
     <div>
-      <PageHeader title="Partners & DMO" subtitle="Manage distribution partners and API access">
+      <PageHeader title="Partnerji & DMO" subtitle="Upravljanje distribucijskih partnerjev in API dostopa">
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -102,7 +102,7 @@ export default function Partners() {
           <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> Add Partner
+          <Plus className="w-4 h-4" /> Dodaj partnerja
         </Button>
       </PageHeader>
 

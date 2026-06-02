@@ -224,13 +224,13 @@ export default function Invoices() {
 
   return (
     <div>
-      <PageHeader title="Invoices" subtitle={`${invoices.length} invoices`}>
+      <PageHeader title="Računi" subtitle={`${invoices.length} računov`}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
+          <Input placeholder="Iskanje..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> New Invoice
+          <Plus className="w-4 h-4" /> Nov račun
         </Button>
       </PageHeader>
 
@@ -269,7 +269,7 @@ export default function Invoices() {
       </div>
 
       {invoices.length === 0 && !isLoading ? (
-        <EmptyState icon={FileText} title="No invoices" description="Create invoices from bookings or manually." actionLabel="New Invoice" onAction={openCreate} />
+        <EmptyState icon={FileText} title="Ni računov" description="Ustvarite račune iz rezervacij ali ročno." actionLabel="Nov račun" onAction={openCreate} />
       ) : (
         <>
           <DataTable columns={columns} data={filtered} isLoading={isLoading} />
@@ -315,7 +315,7 @@ export default function Invoices() {
       {/* Invoice Form Dialog */}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>New Invoice</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>Nov račun</DialogTitle></DialogHeader>
           <div className="space-y-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="space-y-1.5"><Label>Type</Label>
@@ -373,7 +373,7 @@ export default function Invoices() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <Label className="text-sm font-medium">Invoice Lines</Label>
-                <Button variant="outline" size="sm" onClick={addLine} className="gap-1"><Plus className="w-3 h-3" /> Add Line</Button>
+                <Button variant="outline" size="sm" onClick={addLine} className="gap-1"><Plus className="w-3 h-3" /> Dodaj postavko</Button>
               </div>
               <div className="space-y-3">
                 {lines.map((line, i) => (
@@ -409,7 +409,7 @@ export default function Invoices() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={createMutation.isPending}>Create Invoice</Button>
+            <Button onClick={handleSave} disabled={createMutation.isPending}>Ustvari račun</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

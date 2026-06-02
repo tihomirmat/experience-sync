@@ -62,15 +62,15 @@ export default function Dashboard() {
         <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
           <ShoppingBag className="w-8 h-8 text-blue-400" />
         </div>
-        <h2 className="text-xl font-semibold mb-2">Welcome to Experience Ops</h2>
+        <h2 className="text-xl font-semibold mb-2">Dobrodošli</h2>
         <p className="text-gray-500 mb-6 text-center max-w-md">
-          Create your first tenant to get started with managing experiences, bookings, and invoicing.
+          Ustvarite svoje prvo podjetje za upravljanje doživetij, rezervacij in računov.
         </p>
         <Link 
           to={createPageUrl('IntegrationSettings')}
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
         >
-          Get Started <ArrowRight className="w-4 h-4" />
+          Začnite <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     );
@@ -151,21 +151,21 @@ export default function Dashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-amber-800">{alerts.length} active alert{alerts.length > 1 ? 's' : ''}</p>
+            <p className="text-sm font-medium text-amber-800">{alerts.length} {alerts.length === 1 ? 'aktivno opozorilo' : 'aktivnih opozoril'}</p>
             <p className="text-xs text-amber-600 mt-0.5">{alerts[0]?.message}</p>
           </div>
           <Link to={createPageUrl('Monitoring')} className="ml-auto text-xs text-amber-700 hover:underline shrink-0">
-            View all
+            Poglej vse
           </Link>
         </div>
       )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Revenue" value={`€${totalRevenue.toLocaleString('de-DE', { minimumFractionDigits: 2 })}`} icon={DollarSign} color="green" />
-        <StatCard title="Bookings" value={confirmedBookings} icon={Inbox} color="blue" />
-        <StatCard title="Customers" value={customers.length} icon={Users} color="purple" />
-        <StatCard title="Open Invoices" value={pendingInvoices} icon={FileText} color="amber" />
+        <StatCard title="Prihodek" value={`€${totalRevenue.toLocaleString('de-DE', { minimumFractionDigits: 2 })}`} icon={DollarSign} color="green" />
+        <StatCard title="Rezervacije" value={confirmedBookings} icon={Inbox} color="blue" />
+        <StatCard title="Stranke" value={customers.length} icon={Users} color="purple" />
+        <StatCard title="Odprti računi" value={pendingInvoices} icon={FileText} color="amber" />
       </div>
 
       {/* Mini Revenue Chart */}
@@ -191,7 +191,7 @@ export default function Dashboard() {
         {/* Channel Mix */}
         <Card className="lg:col-span-2 border-0 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">Booking Channels</CardTitle>
+            <CardTitle className="text-base font-medium">Prodajni kanali</CardTitle>
           </CardHeader>
           <CardContent>
             {chartData.length > 0 ? (
@@ -206,7 +206,7 @@ export default function Dashboard() {
               </ResponsiveContainer>
             ) : (
               <div className="flex items-center justify-center h-60 text-gray-400 text-sm">
-                No booking data yet
+                Še ni podatkov o rezervacijah
               </div>
             )}
           </CardContent>
@@ -215,8 +215,8 @@ export default function Dashboard() {
         {/* Recent Bookings */}
         <Card className="border-0 shadow-sm">
           <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium">Recent Bookings</CardTitle>
-            <Link to={createPageUrl('Bookings')} className="text-xs text-blue-600 hover:underline">View all</Link>
+            <CardTitle className="text-base font-medium">Zadnje rezervacije</CardTitle>
+            <Link to={createPageUrl('Bookings')} className="text-xs text-blue-600 hover:underline">Poglej vse</Link>
           </CardHeader>
           <CardContent>
             {bookingsLoading ? (
@@ -228,7 +228,7 @@ export default function Dashboard() {
                 {recentBookings.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{b.customer_name || 'Guest'}</p>
+                      <p className="text-sm font-medium truncate">{b.customer_name || 'Gost'}</p>
                       <p className="text-xs text-gray-400 truncate">{b.experience_title}</p>
                     </div>
                     <div className="text-right shrink-0 ml-3">
@@ -239,7 +239,7 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-8">No bookings yet</p>
+              <p className="text-sm text-gray-400 text-center py-8">Še ni rezervacij</p>
             )}
           </CardContent>
         </Card>

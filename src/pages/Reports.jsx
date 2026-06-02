@@ -68,7 +68,7 @@ export default function Reports() {
 
   return (
     <div>
-      <PageHeader title="Reports" subtitle="Revenue, channels, and financial overview">
+      <PageHeader title="Poročila" subtitle="Prihodki, kanali in finančni pregled">
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
           <SelectContent>

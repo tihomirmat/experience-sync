@@ -52,13 +52,13 @@ export default function Companies() {
 
   return (
     <div>
-      <PageHeader title="Companies" subtitle={`${companies.length} companies`}>
+      <PageHeader title="Podjetja" subtitle={`${companies.length} podjetij`}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
+          <Input placeholder="Iskanje..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> Add Company
+          <Plus className="w-4 h-4" /> Dodaj podjetje
         </Button>
       </PageHeader>
 

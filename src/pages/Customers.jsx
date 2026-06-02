@@ -68,13 +68,13 @@ export default function Customers() {
 
   return (
     <div>
-      <PageHeader title="Customers" subtitle={`${customers.length} customers`}>
+      <PageHeader title="Stranke" subtitle={`${customers.length} strank`}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
+          <Input placeholder="Iskanje..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> Add Customer
+          <Plus className="w-4 h-4" /> Dodaj stranko
         </Button>
       </PageHeader>
 

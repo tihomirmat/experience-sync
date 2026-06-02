@@ -22,6 +22,13 @@ export default function HowToCard({ storageKey, title = 'Kako to deluje', steps 
   });
   const [open, setOpen] = React.useState(true);
 
+  // Allow the top-bar "Pomoč" button to bring dismissed tips back.
+  React.useEffect(() => {
+    const reopen = () => { setDismissed(false); setOpen(true); };
+    window.addEventListener('os:reopen-help', reopen);
+    return () => window.removeEventListener('os:reopen-help', reopen);
+  }, []);
+
   if (dismissed) return null;
 
   const dismiss = () => {

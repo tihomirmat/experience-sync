@@ -119,13 +119,13 @@ export default function Experiences() {
 
   return (
     <div>
-      <PageHeader title="Experiences" subtitle={`${experiences.length} experiences`}>
+      <PageHeader title="Doživetja" subtitle={`${experiences.length} doživetij`}>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
+          <Input placeholder="Iskanje..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 w-56" />
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2">
-          <Plus className="w-4 h-4" /> Add Experience
+          <Plus className="w-4 h-4" /> Dodaj doživetje
         </Button>
       </PageHeader>
 
@@ -134,14 +134,14 @@ export default function Experiences() {
         title="Kako dodate doživetje"
         intro="Doživetja so vse, kar prodajate: degustacije, delavnice ali nastanitve za najem."
         steps={[
-          'Kliknite „Add Experience" in vpišite naziv ter ceno.',
+          'Kliknite „Dodaj doživetje" in vpišite naziv ter ceno.',
           'Pri „Hub / OTA listing ID" povežite doživetje s kanalom (npr. FareHarbor), če ga uporabljate — tako se rezervacije uvozijo same.',
           'Shranite. Doživetje je takoj na voljo za rezervacije.',
         ]}
       />
 
       {experiences.length === 0 && !isLoading ? (
-        <EmptyState icon={Map} title="No experiences yet" description="Add your first experience or sync from your distribution hub." actionLabel="Add Experience" onAction={openCreate} />
+        <EmptyState icon={Map} title="Še ni doživetij" description="Dodajte prvo doživetje ali ga sinhronizirajte iz povezanega kanala." actionLabel="Dodaj doživetje" onAction={openCreate} />
       ) : (
         <DataTable columns={columns} data={filtered} isLoading={isLoading} onRowClick={openEdit} />
       )}

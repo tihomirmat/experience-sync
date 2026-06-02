@@ -79,7 +79,7 @@ export default function Monitoring() {
 
   return (
     <div>
-      <PageHeader title="Monitoring" subtitle="Alerts, webhooks, and audit trail" />
+      <PageHeader title="Spremljanje" subtitle="Opozorila, webhooki in dnevnik dogodkov" />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">

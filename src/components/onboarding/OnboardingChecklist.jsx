@@ -21,6 +21,13 @@ export default function OnboardingChecklist() {
     try { return localStorage.getItem(storageKey) === '1'; } catch { return false; }
   });
 
+  // Allow the top-bar "Pomoč" button to bring the checklist back.
+  React.useEffect(() => {
+    const reopen = () => setDismissed(false);
+    window.addEventListener('os:reopen-help', reopen);
+    return () => window.removeEventListener('os:reopen-help', reopen);
+  }, []);
+
   const countOpts = (entity, key) => ({
     queryKey: [key, tenantId],
     queryFn: () => base44.entities[entity].filter({ tenant_id: tenantId }),

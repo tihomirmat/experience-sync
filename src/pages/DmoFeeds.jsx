@@ -93,8 +93,8 @@ export default function DmoFeeds() {
     <div>
       <PageHeader
         title="DMO Feeds"
-        subtitle="Public API endpoints for partner integration"
-        actions={<Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> New Feed Profile</Button>}
+        subtitle="Javni API viri za partnersko integracijo"
+        actions={<Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> Nov profil vira</Button>}
       />
 
       {/* Endpoints Overview */}

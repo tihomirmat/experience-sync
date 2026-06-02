@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { TenantProvider, useTenant } from './components/shared/TenantContext';
 import { 
   LayoutDashboard, Map, Calendar, Inbox, Users, Building2, 
   FileText, Handshake, Globe, Activity, BarChart3, Settings,
-  ChevronDown, Menu, X, LogOut, Bell, Plug, Mail
+  ChevronDown, Menu, X, LogOut, Bell, Plug, Mail, HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -166,10 +166,23 @@ function SidebarContent({ currentPageName, onClose }) {
 function LayoutInner({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
+
+  // "Pomoč": clear all dismissed onboarding/how-to flags, signal the cards to
+  // reappear, and go to the Dashboard so the guidance is front and centre.
+  const reopenHelp = () => {
+    try {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith('os_howto_') || k.startsWith('os_onboarding_dismissed_'))
+        .forEach(k => localStorage.removeItem(k));
+    } catch { /* ignore */ }
+    window.dispatchEvent(new Event('os:reopen-help'));
+    navigate(createPageUrl('Dashboard'));
+  };
 
   return (
     <div className="flex h-screen bg-[#FAFBFC]">
@@ -198,6 +211,9 @@ function LayoutInner({ children, currentPageName }) {
           <div className="lg:hidden" />
           <div className="hidden lg:block" />
           <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={reopenHelp} className="h-8 gap-1.5 text-gray-500 hover:text-gray-900">
+              <HelpCircle className="w-4 h-4" /> <span className="hidden sm:inline text-xs">Pomoč</span>
+            </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400">
               <Bell className="w-4 h-4" />
             </Button>
