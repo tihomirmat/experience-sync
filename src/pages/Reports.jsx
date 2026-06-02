@@ -6,7 +6,7 @@ import PageHeader from '../components/shared/PageHeader';
 import StatCard from '../components/shared/StatCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DollarSign, Users, FileText, Percent, TrendingUp, ShoppingBag } from 'lucide-react';
+import { DollarSign, Users, Percent, ShoppingBag } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 const COLORS = ['#2563EB', '#059669', '#D97706', '#DC2626', '#8B5CF6', '#EC4899'];

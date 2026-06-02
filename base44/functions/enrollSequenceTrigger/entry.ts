@@ -8,7 +8,7 @@
  *   data: current entity data
  *   old_data: previous data (update events)
  */
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.28';
 
 // Map entity events to sequence triggers
 function resolveTriggersForEvent(entityName, eventType, data, oldData) {

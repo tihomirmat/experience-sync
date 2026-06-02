@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { X, CheckCircle2, ExternalLink, Copy, Trash2, Pause } from 'lucide-react';
-import { SYNC_DIRECTION_LABELS } from './channelCatalog';
+import { X, Copy, Trash2, Pause } from 'lucide-react';
 import { toast } from 'sonner';
 
 const SETUP_STEPS = {

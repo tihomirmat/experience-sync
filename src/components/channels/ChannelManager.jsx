@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Search, Wifi, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { CHANNEL_CATALOG, CATEGORIES } from './channelCatalog';
 import ChannelCard from './ChannelCard';

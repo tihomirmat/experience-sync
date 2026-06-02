@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, FileText, Mail, Printer, ArrowRight } from 'lucide-react';
 import EmailCompose from '@/components/email/EmailCompose';
-import { format } from 'date-fns';
 
 const STATUS_COLORS = {
   draft: 'bg-gray-100 text-gray-600 border-gray-200',

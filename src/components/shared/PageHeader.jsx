@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 
 export default function PageHeader({ title, subtitle, actions, children }) {
   return (

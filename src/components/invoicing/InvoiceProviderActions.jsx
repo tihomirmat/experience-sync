@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Send, RefreshCw, Download, CheckCircle2, AlertCircle, Clock, Loader2, ExternalLink } from 'lucide-react';
+import { Send, RefreshCw, Download, CheckCircle2, Loader2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
 const PROVIDER_NAMES = { quibi: 'Quibi', cebelca: 'Čebelca' };

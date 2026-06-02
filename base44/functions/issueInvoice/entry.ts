@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.28';
 
 async function issueViaQuibi(invoice, connection, settings, creds) {
   const baseUrl = creds.base_url || 'https://si.quibi.net';

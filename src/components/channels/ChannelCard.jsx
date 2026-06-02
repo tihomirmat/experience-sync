@@ -1,5 +1,4 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Clock, ArrowLeftRight, ArrowDownToLine, ArrowUpFromLine, Settings } from 'lucide-react';
 import { SYNC_DIRECTION_LABELS } from './channelCatalog';

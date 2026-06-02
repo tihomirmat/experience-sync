@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { useTenant } from '../components/shared/TenantContext';
@@ -10,10 +10,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
-  Inbox, FileText, Users, Calendar, TrendingUp, ArrowRight,
-  DollarSign, ShoppingBag, Globe, AlertTriangle
+  Inbox, FileText, Users, TrendingUp, ArrowRight,
+  DollarSign, ShoppingBag, AlertTriangle
 } from 'lucide-react';
-import { format, subMonths, startOfMonth, endOfMonth, getMonth, getYear } from 'date-fns';
+import { format, subMonths, getMonth, getYear } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function Dashboard() {

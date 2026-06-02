@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 import { useTenant } from '../components/shared/TenantContext';
 import PageHeader from '../components/shared/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import InquiriesTab from '../components/groups/InquiriesTab';
 import OffersTab from '../components/groups/OffersTab';
-import { Users } from 'lucide-react';
 
 export default function Groups() {
   const { currentTenant } = useTenant();

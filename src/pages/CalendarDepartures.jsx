@@ -15,8 +15,7 @@ import { ChevronLeft, ChevronRight, Plus, Calendar, Users as UsersIcon } from 'l
 import {
   format, addDays, addWeeks, addMonths,
   startOfWeek, endOfWeek, startOfMonth, endOfMonth,
-  eachDayOfInterval, isSameDay, isSameMonth, parseISO,
-  setHours, startOfDay, endOfDay
+  eachDayOfInterval, isSameDay, isSameMonth
 } from 'date-fns';
 
 const VIEWS = ['month', 'week', 'day'];

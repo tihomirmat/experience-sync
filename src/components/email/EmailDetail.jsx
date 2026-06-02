@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { Reply, Forward, Archive, Trash2, Paperclip } from 'lucide-react';
+import { Reply, Archive, Trash2, Paperclip } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

@@ -6,7 +6,7 @@
  *   3. Log the email in EmailMessage
  *   4. Advance to next step (or complete enrollment)
  */
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.28';
 
 // ── helpers ────────────────────────────────────────────────────────────────
 

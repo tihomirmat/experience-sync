@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { X, Send, ChevronDown, FileText } from 'lucide-react';
+import { X, Send, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import { format, addMinutes } from 'date-fns';
 
 function applyVariables(text, ctx) {
   if (!text || !ctx) return text;

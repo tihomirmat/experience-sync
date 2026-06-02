@@ -4,7 +4,7 @@
  * - On confirmed: decrement departure capacity_remaining by total_pax
  * - On cancelled: increment capacity_remaining back by total_pax
  */
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.28';
 
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);

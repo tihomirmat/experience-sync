@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { startOfMonth, endOfMonth, subDays, startOfYear, endOfYear, subMonths, startOfDay, endOfDay, format } from 'date-fns';
+import { startOfMonth, endOfMonth, subDays, startOfYear, endOfYear, subMonths } from 'date-fns';
 
 const PRESETS = [
   { label: 'Ta mesec', key: 'this_month' },
