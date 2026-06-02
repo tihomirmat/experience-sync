@@ -54,5 +54,13 @@ Deno.serve(async (req) => {
 
   console.log(`[updateDepartureCapacity] Departure ${data.departure_id}: ${current} → ${newCapacity} (booking ${data.id}, pax ${pax}, action ${becameConfirmed || isNewConfirmed ? 'decrement' : 'increment'})`);
 
+  // Propagate the new remaining capacity to outbound channels (prevents
+  // cross-channel overbooking). Best-effort — never block the capacity update.
+  try {
+    await base44.functions.invoke('pushAvailability', { departure_id: data.departure_id });
+  } catch (e) {
+    console.error(`[updateDepartureCapacity] pushAvailability failed for ${data.departure_id}: ${e.message}`);
+  }
+
   return Response.json({ ok: true, departure_id: data.departure_id, old_capacity: current, new_capacity: newCapacity });
 });
