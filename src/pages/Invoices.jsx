@@ -6,6 +6,7 @@ import PageHeader from '../components/shared/PageHeader';
 import DataTable from '../components/shared/DataTable';
 import StatusBadge from '../components/shared/StatusBadge';
 import EmptyState from '../components/shared/EmptyState';
+import HowToCard from '../components/shared/HowToCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -232,6 +233,17 @@ export default function Invoices() {
           <Plus className="w-4 h-4" /> New Invoice
         </Button>
       </PageHeader>
+
+      <HowToCard
+        storageKey="invoices"
+        title="Kako izdate račun"
+        intro="Račun lahko ustvarite ročno ali pa se ustvari sam ob potrjeni rezervaciji."
+        steps={[
+          'Najprej v „Integracije" povežite Quibi ali Čebelco (enkratna nastavitev).',
+          'Pri rezervaciji kliknite „Ustvari račun" — podatki se prenesejo samodejno.',
+          'Kliknite „Izdaj", da se račun fiskalizira in dobi številko (EOR/ZOI).',
+        ]}
+      />
 
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <Tabs value={statusFilter} onValueChange={setStatusFilter}>

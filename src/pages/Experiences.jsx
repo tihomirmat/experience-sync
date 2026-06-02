@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTenant } from '../components/shared/TenantContext';
@@ -6,6 +7,7 @@ import PageHeader from '../components/shared/PageHeader';
 import DataTable from '../components/shared/DataTable';
 import StatusBadge from '../components/shared/StatusBadge';
 import EmptyState from '../components/shared/EmptyState';
+import HowToCard from '../components/shared/HowToCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -52,6 +54,17 @@ export default function Experiences() {
     setEditing(null);
     setShowForm(true);
   };
+
+  // Deep-link: /Experiences?new=1 opens the create form straight away.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('new') && tenantId) {
+      openCreate();
+      searchParams.delete('new');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, tenantId]);
 
   const openEdit = (exp) => {
     setForm({ ...exp });
@@ -115,6 +128,17 @@ export default function Experiences() {
           <Plus className="w-4 h-4" /> Add Experience
         </Button>
       </PageHeader>
+
+      <HowToCard
+        storageKey="experiences"
+        title="Kako dodate doživetje"
+        intro="Doživetja so vse, kar prodajate: degustacije, delavnice ali nastanitve za najem."
+        steps={[
+          'Kliknite „Add Experience" in vpišite naziv ter ceno.',
+          'Pri „Hub / OTA listing ID" povežite doživetje s kanalom (npr. FareHarbor), če ga uporabljate — tako se rezervacije uvozijo same.',
+          'Shranite. Doživetje je takoj na voljo za rezervacije.',
+        ]}
+      />
 
       {experiences.length === 0 && !isLoading ? (
         <EmptyState icon={Map} title="No experiences yet" description="Add your first experience or sync from your distribution hub." actionLabel="Add Experience" onAction={openCreate} />

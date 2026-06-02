@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import InvoicingConnectionCard from '../components/integrations/InvoicingConnectionCard';
 import InvoicingConnectionForm from '../components/integrations/InvoicingConnectionForm';
 import LocalPartnersTable from '../components/integrations/LocalPartnersTable';
+import HowToCard from '../components/shared/HowToCard';
 import ChannelPerformanceTable from '../components/integrations/ChannelPerformanceTable';
 import ChannelManager from '../components/channels/ChannelManager';
 
@@ -55,6 +56,16 @@ export default function Integrations() {
 
   return (
     <div className="space-y-6">
+      <HowToCard
+        storageKey="integrations"
+        title="Kako povežete kanale in računovodstvo"
+        intro="Tukaj povežete prodajne kanale (FareHarbor, Bokun, Viator …) in program za račune (Quibi, Čebelca). To je enkratna nastavitev."
+        steps={[
+          'Izberite kanal, kliknite „Connect" in prilepite API ključ iz svojega računa na kanalu.',
+          'Za samodejni uvoz rezervacij ustvarite „Webhook Secret" in kopirajte webhook URL v nastavitve kanala.',
+          'V zavihku „Računovodstvo" povežite Quibi ali Čebelco za izdajanje računov.',
+        ]}
+      />
       <Tabs defaultValue="channels">
         <TabsList>
           <TabsTrigger value="channels">🌐 Channel Manager</TabsTrigger>

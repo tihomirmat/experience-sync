@@ -14,24 +14,46 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
 
-const navItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
-  { name: 'Experiences', icon: Map, page: 'Experiences' },
-  { name: 'Calendar', icon: Calendar, page: 'CalendarDepartures' },
-  { name: 'Bookings', icon: Inbox, page: 'Bookings' },
-  { name: 'Customers', icon: Users, page: 'Customers' },
-  { name: 'Companies', icon: Building2, page: 'Companies' },
-  { name: 'Email', icon: Mail, page: 'Email' },
-  { name: 'Email sekvence', icon: Activity, page: 'EmailSequences' },
-  { name: 'Invoices', icon: FileText, page: 'Invoices' },
-  { name: 'Agencije & Skupine', icon: Users, page: 'Groups' },
-  { name: 'Partners', icon: Handshake, page: 'Partners' },
-  { name: 'DMO Feeds', icon: Globe, page: 'DmoFeeds' },
-  { name: 'Monitoring', icon: Activity, page: 'Monitoring' },
-  { name: 'Analitika', icon: BarChart3, page: 'Analytics' },
-  { name: 'Reports', icon: BarChart3, page: 'Reports' },
-  { name: 'Integracije', icon: Plug, page: 'Integrations' },
-  { name: 'Settings', icon: Settings, page: 'IntegrationSettings' },
+// Grouped so the few daily tasks come first and advanced/setup is clearly
+// secondary — keeps the sidebar from overwhelming a time-poor user.
+const navGroups = [
+  {
+    label: 'Vsak dan',
+    items: [
+      { name: 'Pregled', icon: LayoutDashboard, page: 'Dashboard' },
+      { name: 'Rezervacije', icon: Inbox, page: 'Bookings' },
+      { name: 'Koledar', icon: Calendar, page: 'CalendarDepartures' },
+      { name: 'Doživetja', icon: Map, page: 'Experiences' },
+    ],
+  },
+  {
+    label: 'Stranke & sporočila',
+    items: [
+      { name: 'Stranke', icon: Users, page: 'Customers' },
+      { name: 'Podjetja', icon: Building2, page: 'Companies' },
+      { name: 'Agencije & skupine', icon: Handshake, page: 'Groups' },
+      { name: 'E-pošta', icon: Mail, page: 'Email' },
+      { name: 'E-poštne sekvence', icon: Activity, page: 'EmailSequences' },
+    ],
+  },
+  {
+    label: 'Računi & poročila',
+    items: [
+      { name: 'Računi', icon: FileText, page: 'Invoices' },
+      { name: 'Analitika', icon: BarChart3, page: 'Analytics' },
+      { name: 'Poročila', icon: BarChart3, page: 'Reports' },
+    ],
+  },
+  {
+    label: 'Nastavitve',
+    items: [
+      { name: 'Integracije', icon: Plug, page: 'Integrations' },
+      { name: 'Partnerji', icon: Handshake, page: 'Partners' },
+      { name: 'DMO viri', icon: Globe, page: 'DmoFeeds' },
+      { name: 'Spremljanje', icon: Activity, page: 'Monitoring' },
+      { name: 'Nastavitve', icon: Settings, page: 'IntegrationSettings' },
+    ],
+  },
 ];
 
 function SidebarContent({ currentPageName, onClose }) {
@@ -103,34 +125,39 @@ function SidebarContent({ currentPageName, onClose }) {
       )}
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {navItems.map(item => {
-          const isActive = currentPageName === item.page;
-          return (
-            <Link
-              key={item.page}
-              to={createPageUrl(item.page)}
-              onClick={onClose}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150
-                ${isActive 
-                  ? 'bg-blue-50 text-blue-700 font-medium' 
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
-            >
-              <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
-              <span className="flex-1">{item.name}</span>
-              {item.page === 'Invoices' && unpaidCount > 0 && (
-                <span className="ml-auto text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
-                  {unpaidCount}
-                </span>
-              )}
-              {item.page === 'Email' && unreadEmailCount > 0 && (
-                <span className="ml-auto text-xs bg-blue-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
-                  {unreadEmailCount}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
+        {navGroups.map(group => (
+          <div key={group.label} className="space-y-0.5">
+            <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-gray-300">{group.label}</p>
+            {group.items.map(item => {
+              const isActive = currentPageName === item.page;
+              return (
+                <Link
+                  key={item.page}
+                  to={createPageUrl(item.page)}
+                  onClick={onClose}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150
+                    ${isActive
+                      ? 'bg-blue-50 text-blue-700 font-medium'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+                >
+                  <item.icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <span className="flex-1">{item.name}</span>
+                  {item.page === 'Invoices' && unpaidCount > 0 && (
+                    <span className="ml-auto text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
+                      {unpaidCount}
+                    </span>
+                  )}
+                  {item.page === 'Email' && unreadEmailCount > 0 && (
+                    <span className="ml-auto text-xs bg-blue-500 text-white rounded-full px-1.5 py-0.5 leading-none font-medium min-w-[18px] text-center">
+                      {unreadEmailCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
     </div>
   );

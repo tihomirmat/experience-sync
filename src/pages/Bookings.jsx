@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTenant } from '../components/shared/TenantContext';
@@ -6,6 +7,7 @@ import PageHeader from '../components/shared/PageHeader';
 import DataTable from '../components/shared/DataTable';
 import StatusBadge from '../components/shared/StatusBadge';
 import EmptyState from '../components/shared/EmptyState';
+import HowToCard from '../components/shared/HowToCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,6 +68,18 @@ export default function Bookings() {
     mutationFn: ({ id, data }) => base44.entities.Booking.update(id, data),
     onSuccess: (updated) => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setSelectedBooking(prev => prev ? { ...prev, ...updated } : null); },
   });
+
+  // Deep-link: /Bookings?new=1 opens the create form straight away.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('new') && tenantId) {
+      setForm({ tenant_id: tenantId, status: 'pending', channel: 'direct', currency: 'EUR', adults: 1, children: 0 });
+      setShowForm(true);
+      searchParams.delete('new');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, tenantId]);
 
   const createInvoiceMutation = useMutation({
     mutationFn: async ({ booking, formData }) => {
@@ -147,6 +161,17 @@ export default function Bookings() {
           <Plus className="w-4 h-4" /> New Booking
         </Button>
       </PageHeader>
+
+      <HowToCard
+        storageKey="bookings"
+        title="Kako deluje stran Rezervacije"
+        intro="Tukaj so vse rezervacije — ročne in tiste, ki se samodejno uvozijo iz povezanih kanalov."
+        steps={[
+          'Kliknite „New Booking", izberite doživetje, vpišite stranko in znesek.',
+          'Ko je rezervacija „confirmed", se prosta mesta samodejno posodobijo na vseh kanalih.',
+          'Račun ustvarite z enim klikom v podrobnostih rezervacije.',
+        ]}
+      />
 
       <Tabs value={statusFilter} onValueChange={setStatusFilter} className="mb-6">
         <TabsList className="bg-gray-100/70">
