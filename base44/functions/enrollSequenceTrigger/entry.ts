@@ -3,12 +3,21 @@
  * Called by entity automations (Booking create/update, Customer create, GroupOffer update, GroupInquiry create)
  * Checks if any active sequence matches the trigger and enrolls the relevant customer.
  *
+ * SECURITY: This endpoint can be invoked without authentication (entity
+ * automations call it), so it must NEVER trust the request payload.
+ * The payload only tells us WHICH entity changed — the actual entity data is
+ * reloaded from the database before any trigger is resolved. An attacker can
+ * therefore not enroll arbitrary e-mail addresses; at most they can re-fire a
+ * trigger for a real record, which is de-duplicated below.
+ *
  * Payload shape (from entity automation):
  *   event: { type, entity_name, entity_id }
- *   data: current entity data
- *   old_data: previous data (update events)
+ *   data: current entity data (used only for the id fallback)
+ *   old_data: previous data (update events; used only for transition gating)
  */
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+
+const SUPPORTED_ENTITIES = ['Customer', 'Booking', 'GroupOffer', 'GroupInquiry'];
 
 // Map entity events to sequence triggers
 function resolveTriggersForEvent(entityName, eventType, data, oldData) {
@@ -19,10 +28,8 @@ function resolveTriggersForEvent(entityName, eventType, data, oldData) {
   }
 
   if (entityName === 'Booking') {
-    if (eventType === 'create' || (eventType === 'update' && oldData?.status !== 'confirmed' && data.status === 'confirmed')) {
-      if (data.status === 'confirmed') {
-        triggers.push({ trigger: 'booking_confirmed', customer_id: data.customer_id, customer_email: data.customer_email, tenant_id: data.tenant_id, context: { customer_name: data.customer_name, experience_title: data.experience_title, departure_date: data.departure_date } });
-      }
+    if (data.status === 'confirmed' && (eventType === 'create' || (eventType === 'update' && oldData?.status !== 'confirmed'))) {
+      triggers.push({ trigger: 'booking_confirmed', customer_id: data.customer_id, customer_email: data.customer_email, tenant_id: data.tenant_id, context: { customer_name: data.customer_name, experience_title: data.experience_title, departure_date: data.departure_date } });
     }
     if (eventType === 'update' && oldData?.status !== 'completed' && data.status === 'completed') {
       triggers.push({ trigger: 'booking_completed', customer_id: data.customer_id, customer_email: data.customer_email, tenant_id: data.tenant_id, context: { customer_name: data.customer_name, experience_title: data.experience_title } });
@@ -30,10 +37,7 @@ function resolveTriggersForEvent(entityName, eventType, data, oldData) {
   }
 
   if (entityName === 'GroupOffer') {
-    if (eventType === 'create' && data.status === 'sent') {
-      triggers.push({ trigger: 'offer_sent', customer_id: null, customer_email: data.contact_email, tenant_id: data.tenant_id, context: { customer_name: data.contact_name, company_name: data.company_name, offer_number: data.offer_number, experience_title: data.experience_title } });
-    }
-    if (eventType === 'update' && oldData?.status !== 'sent' && data.status === 'sent') {
+    if (data.status === 'sent' && (eventType === 'create' || (eventType === 'update' && oldData?.status !== 'sent'))) {
       triggers.push({ trigger: 'offer_sent', customer_id: null, customer_email: data.contact_email, tenant_id: data.tenant_id, context: { customer_name: data.contact_name, company_name: data.company_name, offer_number: data.offer_number, experience_title: data.experience_title } });
     }
     if (eventType === 'update' && oldData?.status !== 'accepted' && data.status === 'accepted') {
@@ -50,15 +54,28 @@ function resolveTriggersForEvent(entityName, eventType, data, oldData) {
 
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
-  const payload = await req.json();
-  const { event, data, old_data } = payload;
+
+  let payload = {};
+  try { payload = await req.json(); } catch { /* ignore */ }
+  const { event, data, old_data } = payload || {};
 
   if (!event || !data) return Response.json({ ok: true, skipped: 'no_data' });
 
-  const triggers = resolveTriggersForEvent(event.entity_name, event.type, data, old_data);
+  const entityName = event.entity_name;
+  const entityId = event.entity_id || data.id;
+  if (!SUPPORTED_ENTITIES.includes(entityName) || !entityId) {
+    return Response.json({ ok: true, skipped: 'unsupported_entity' });
+  }
+
+  // SECURITY: reload the entity from the database — never trust payload data.
+  let dbData = null;
+  try { dbData = await base44.asServiceRole.entities[entityName].get(entityId); } catch { /* ignore */ }
+  if (!dbData) return Response.json({ ok: true, skipped: 'entity_not_found' });
+
+  const triggers = resolveTriggersForEvent(entityName, event.type, dbData, old_data);
   if (triggers.length === 0) return Response.json({ ok: true, skipped: 'no_matching_trigger' });
 
-  console.log(`[enrollSequenceTrigger] ${event.entity_name} ${event.type} → ${triggers.map(t => t.trigger).join(', ')}`);
+  console.log(`[enrollSequenceTrigger] ${entityName} ${event.type} → ${triggers.map(t => t.trigger).join(', ')}`);
 
   const enrolled = [];
 
