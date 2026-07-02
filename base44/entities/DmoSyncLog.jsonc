@@ -1,0 +1,35 @@
+{
+  "name": "DmoSyncLog",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "partner_id": {
+      "type": "string"
+    },
+    "endpoint": {
+      "type": "string"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "response_code": {
+      "type": "number"
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "records_returned": {
+      "type": "number"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "partner_id",
+    "endpoint"
+  ]
+}

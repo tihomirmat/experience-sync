@@ -1,0 +1,81 @@
+{
+  "name": "CustomerExtended",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "birthdate": {
+      "type": "string",
+      "format": "date"
+    },
+    "country": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "sl",
+        "en",
+        "de",
+        "it",
+        "fr",
+        "other"
+      ],
+      "default": "sl"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "airbnb",
+        "gyg",
+        "booking",
+        "referral",
+        "walk_in",
+        "other"
+      ],
+      "default": "direct"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allergies": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "regular",
+        "vip",
+        "agency",
+        "one_time"
+      ],
+      "default": "regular"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_followup_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "lifetime_value": {
+      "type": "number"
+    },
+    "acquisition_channel": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "customer_id"
+  ]
+}

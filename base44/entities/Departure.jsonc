@@ -1,0 +1,53 @@
+{
+  "name": "Departure",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "experience_id": {
+      "type": "string"
+    },
+    "hub_departure_id": {
+      "type": "string"
+    },
+    "start_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "capacity_total": {
+      "type": "number"
+    },
+    "capacity_remaining": {
+      "type": "number"
+    },
+    "price_cached": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "closed",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "experience_title": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "experience_id",
+    "start_at"
+  ]
+}

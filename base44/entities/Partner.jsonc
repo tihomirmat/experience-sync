@@ -1,0 +1,78 @@
+{
+  "name": "Partner",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-safe identifier for API access"
+    },
+    "partner_type": {
+      "type": "string",
+      "enum": [
+        "dmo",
+        "hotel",
+        "agency",
+        "reseller"
+      ]
+    },
+    "api_key": {
+      "type": "string",
+      "description": "Raw API key (shown once on create)"
+    },
+    "api_key_hash": {
+      "type": "string",
+      "description": "Hashed API key for validation"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "disabled"
+      ],
+      "default": "active"
+    },
+    "commission_rate": {
+      "type": "number"
+    },
+    "pricing_mode": {
+      "type": "string",
+      "enum": [
+        "net",
+        "gross",
+        "discount"
+      ],
+      "default": "gross"
+    },
+    "payment_terms_days": {
+      "type": "number",
+      "default": 0
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "allowed_experience_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which experiences this partner can access"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "name",
+    "partner_type"
+  ]
+}

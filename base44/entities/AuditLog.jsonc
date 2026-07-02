@@ -1,0 +1,53 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "booking",
+        "invoice",
+        "customer",
+        "company",
+        "experience",
+        "partner",
+        "departure"
+      ]
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "created",
+        "updated",
+        "deleted",
+        "status_changed",
+        "synced",
+        "emailed"
+      ]
+    },
+    "changes_json": {
+      "type": "string"
+    },
+    "performed_by": {
+      "type": "string"
+    },
+    "performed_by_name": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "entity_type",
+    "entity_id",
+    "action"
+  ]
+}

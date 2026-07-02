@@ -1,0 +1,49 @@
+{
+  "name": "InvoicingConnection",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "provider_id": {
+      "type": "string",
+      "enum": [
+        "quibi",
+        "cebelca"
+      ],
+      "description": "Provider identifier"
+    },
+    "credentials_enc": {
+      "type": "string",
+      "description": "JSON string with credentials (stored as-is; encrypt in prod)"
+    },
+    "settings_json": {
+      "type": "string",
+      "description": "JSON: stevilcenje_id, vrstaprodaje, language, space_id, always_fiscalize, etc."
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "error",
+        "unconfigured"
+      ],
+      "default": "unconfigured"
+    },
+    "last_healthcheck_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "provider_id"
+  ]
+}

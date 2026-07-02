@@ -1,0 +1,131 @@
+{
+  "name": "EmailMessage",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "inbound",
+        "outbound"
+      ],
+      "default": "outbound"
+    },
+    "folder": {
+      "type": "string",
+      "default": "inbox"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "queued",
+        "sent",
+        "delivered",
+        "failed",
+        "received",
+        "read"
+      ],
+      "default": "draft"
+    },
+    "from_email": {
+      "type": "string"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "to_email": {
+      "type": "string"
+    },
+    "to_name": {
+      "type": "string"
+    },
+    "cc": {
+      "type": "string"
+    },
+    "bcc": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body_html": {
+      "type": "string"
+    },
+    "body_text": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "booking_id": {
+      "type": "string"
+    },
+    "inquiry_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "thread_id": {
+      "type": "string"
+    },
+    "external_message_id": {
+      "type": "string"
+    },
+    "gmail_thread_id": {
+      "type": "string"
+    },
+    "sequence_id": {
+      "type": "string"
+    },
+    "sequence_step": {
+      "type": "number"
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "clicked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "direction"
+  ]
+}

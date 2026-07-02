@@ -1,0 +1,56 @@
+{
+  "name": "EmailTemplate",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "booking_confirmation",
+        "booking_reminder",
+        "offer_sent",
+        "offer_accepted",
+        "invoice",
+        "birthday",
+        "seasonal",
+        "welcome",
+        "custom"
+      ],
+      "default": "custom"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body_html": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "sl",
+        "en",
+        "both"
+      ],
+      "default": "sl"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "variables_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "tenant_id",
+    "name"
+  ]
+}

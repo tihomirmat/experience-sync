@@ -1,0 +1,49 @@
+{
+  "name": "ProviderEvent",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "external_document_id": {
+      "type": "string"
+    },
+    "provider_id": {
+      "type": "string",
+      "enum": [
+        "quibi",
+        "cebelca"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "issue",
+        "refresh",
+        "pdf",
+        "healthcheck",
+        "fiscalize"
+      ]
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "request_summary": {
+      "type": "string"
+    },
+    "response_summary": {
+      "type": "string"
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "provider_id",
+    "action"
+  ]
+}

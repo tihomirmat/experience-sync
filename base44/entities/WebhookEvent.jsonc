@@ -1,0 +1,43 @@
+{
+  "name": "WebhookEvent",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "bokun",
+        "fareharbor",
+        "stripe"
+      ]
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "payload_json": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "processed",
+        "failed"
+      ],
+      "default": "received"
+    },
+    "error": {
+      "type": "string"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source"
+  ]
+}

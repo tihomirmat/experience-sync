@@ -1,0 +1,104 @@
+{
+  "name": "GroupOffer",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "inquiry_id": {
+      "type": "string"
+    },
+    "offer_number": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "accepted",
+        "declined",
+        "expired"
+      ],
+      "default": "draft"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "company_vat_id": {
+      "type": "string"
+    },
+    "experience_id": {
+      "type": "string"
+    },
+    "experience_title": {
+      "type": "string"
+    },
+    "proposed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "proposed_time": {
+      "type": "string"
+    },
+    "group_size": {
+      "type": "number"
+    },
+    "price_per_person": {
+      "type": "number"
+    },
+    "total_price": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "includes": {
+      "type": "string"
+    },
+    "excludes": {
+      "type": "string"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date"
+    },
+    "payment_terms": {
+      "type": "string"
+    },
+    "special_conditions": {
+      "type": "string"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "accepted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digital_signature": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "booking_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "inquiry_id"
+  ]
+}

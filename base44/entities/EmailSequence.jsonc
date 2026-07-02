@@ -1,0 +1,49 @@
+{
+  "name": "EmailSequence",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "customer_added",
+        "booking_confirmed",
+        "booking_completed",
+        "offer_sent",
+        "offer_accepted",
+        "inquiry_received",
+        "birthday",
+        "manual"
+      ],
+      "default": "manual"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "draft"
+      ],
+      "default": "draft"
+    },
+    "stop_on_reply": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "name"
+  ]
+}

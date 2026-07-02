@@ -1,0 +1,68 @@
+{
+  "name": "ExternalDocument",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string",
+      "description": "FK to Invoice"
+    },
+    "provider_id": {
+      "type": "string",
+      "enum": [
+        "quibi",
+        "cebelca"
+      ]
+    },
+    "provider_document_id": {
+      "type": "string"
+    },
+    "provider_document_number": {
+      "type": "string"
+    },
+    "fiscal_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "fiscalized",
+        "manual_required",
+        "error"
+      ],
+      "default": "none"
+    },
+    "eor": {
+      "type": "string",
+      "description": "EOR from fiscalization (Quibi)"
+    },
+    "zoi": {
+      "type": "string",
+      "description": "ZOI from fiscalization"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "raw_response_json": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "created",
+        "error",
+        "synced"
+      ],
+      "default": "created"
+    },
+    "error_message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "invoice_id",
+    "provider_id"
+  ]
+}

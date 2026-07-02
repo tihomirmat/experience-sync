@@ -1,0 +1,55 @@
+{
+  "name": "EmailSequenceEnrollment",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "sequence_id": {
+      "type": "string"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "stopped",
+        "failed"
+      ],
+      "default": "active"
+    },
+    "current_step": {
+      "type": "number",
+      "default": 1
+    },
+    "next_send_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stopped_reason": {
+      "type": "string"
+    },
+    "context_json": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "sequence_id",
+    "customer_id"
+  ]
+}

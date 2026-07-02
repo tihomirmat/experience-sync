@@ -1,0 +1,37 @@
+{
+  "name": "EmailSequenceStep",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "sequence_id": {
+      "type": "string"
+    },
+    "step_number": {
+      "type": "number"
+    },
+    "delay_days": {
+      "type": "number",
+      "default": 0
+    },
+    "delay_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "template_id": {
+      "type": "string"
+    },
+    "subject_override": {
+      "type": "string"
+    },
+    "condition": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "sequence_id",
+    "step_number"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "Tenant",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Operator/company name"
+    },
+    "country_code": {
+      "type": "string",
+      "description": "ISO-2 country code"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "Europe/Ljubljana"
+    },
+    "default_currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "languages_enabled": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "sl",
+        "en",
+        "de",
+        "hr"
+      ]
+    },
+    "vat_mode": {
+      "type": "string",
+      "enum": [
+        "included",
+        "excluded"
+      ],
+      "default": "included"
+    },
+    "default_vat_rate": {
+      "type": "number",
+      "default": 0.095
+    },
+    "invoice_prefix": {
+      "type": "string",
+      "description": "e.g. JA-2026-"
+    },
+    "invoice_seq_current": {
+      "type": "number",
+      "default": 0
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "address_line1": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "vat_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "suspended"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

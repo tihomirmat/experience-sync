@@ -1,0 +1,135 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "invoice_number": {
+      "type": "string"
+    },
+    "invoice_type": {
+      "type": "string",
+      "enum": [
+        "invoice",
+        "proforma",
+        "credit_note"
+      ],
+      "default": "invoice"
+    },
+    "related_invoice_id": {
+      "type": "string",
+      "description": "For credit notes: FK to original invoice"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "paid",
+        "void"
+      ],
+      "default": "draft"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "sl",
+        "en",
+        "de",
+        "hr"
+      ],
+      "default": "sl"
+    },
+    "booking_id": {
+      "type": "string"
+    },
+    "customer_id": {
+      "type": "string"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "company_vat_id": {
+      "type": "string"
+    },
+    "company_address": {
+      "type": "string"
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "net_total": {
+      "type": "number"
+    },
+    "vat_total": {
+      "type": "number"
+    },
+    "gross_total": {
+      "type": "number"
+    },
+    "reverse_charge": {
+      "type": "boolean",
+      "default": false
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "email_sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "unit_price_net": {
+            "type": "number"
+          },
+          "vat_rate": {
+            "type": "number"
+          },
+          "vat_amount": {
+            "type": "number"
+          },
+          "line_total_gross": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "footer_text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "invoice_number",
+    "invoice_type"
+  ]
+}

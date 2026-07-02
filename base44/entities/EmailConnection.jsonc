@@ -1,0 +1,72 @@
+{
+  "name": "EmailConnection",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "gmail",
+        "smtp",
+        "resend"
+      ],
+      "default": "smtp"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "error",
+        "not_configured"
+      ],
+      "default": "not_configured"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_email": {
+      "type": "string"
+    },
+    "gmail_access_token_enc": {
+      "type": "string"
+    },
+    "gmail_refresh_token_enc": {
+      "type": "string"
+    },
+    "smtp_host": {
+      "type": "string"
+    },
+    "smtp_port": {
+      "type": "number"
+    },
+    "smtp_user": {
+      "type": "string"
+    },
+    "smtp_password_enc": {
+      "type": "string"
+    },
+    "smtp_use_tls": {
+      "type": "boolean",
+      "default": true
+    },
+    "resend_api_key_enc": {
+      "type": "string"
+    },
+    "last_tested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "provider"
+  ]
+}

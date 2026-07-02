@@ -1,0 +1,48 @@
+{
+  "name": "PartnerFeedProfile",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "partner_id": {
+      "type": "string"
+    },
+    "profile_name": {
+      "type": "string",
+      "description": "e.g. canonical-json, jabook-json, jabook-xml"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "canonical_json",
+        "jabook_json",
+        "jabook_xml",
+        "custom_json",
+        "custom_csv"
+      ],
+      "default": "canonical_json"
+    },
+    "field_map_json": {
+      "type": "string",
+      "description": "JSON string: { our_field: their_field, ... }"
+    },
+    "transform_rules_json": {
+      "type": "string",
+      "description": "JSON string: category mapping, rounding, lang selection, etc."
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "partner_id",
+    "profile_name",
+    "format"
+  ]
+}

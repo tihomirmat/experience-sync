@@ -1,0 +1,35 @@
+{
+  "name": "UserTenantRole",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string",
+      "description": "FK to Tenant"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "FK to User"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "staff",
+        "accountant"
+      ],
+      "default": "staff"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "user_id",
+    "role"
+  ]
+}

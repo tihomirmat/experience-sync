@@ -1,0 +1,105 @@
+{
+  "name": "GroupInquiry",
+  "type": "object",
+  "properties": {
+    "tenant_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "email",
+        "phone",
+        "web_form",
+        "walk_in",
+        "agency_portal"
+      ],
+      "default": "email"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "in_negotiation",
+        "offer_sent",
+        "confirmed",
+        "declined",
+        "expired"
+      ],
+      "default": "new"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "company_vat_id": {
+      "type": "string"
+    },
+    "partner_id": {
+      "type": "string"
+    },
+    "experience_id": {
+      "type": "string"
+    },
+    "experience_title": {
+      "type": "string"
+    },
+    "requested_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "requested_time": {
+      "type": "string"
+    },
+    "flexible_dates": {
+      "type": "boolean",
+      "default": false
+    },
+    "group_size": {
+      "type": "number"
+    },
+    "special_requests": {
+      "type": "string"
+    },
+    "allergies": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "departure_id": {
+      "type": "string"
+    },
+    "offer_id": {
+      "type": "string"
+    },
+    "booking_id": {
+      "type": "string"
+    },
+    "gdpr_consent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "tenant_id",
+    "contact_name",
+    "contact_email",
+    "group_size"
+  ]
+}
