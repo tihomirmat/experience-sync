@@ -64,6 +64,7 @@ import Analytics from './pages/Analytics.jsx';
 import Integrations from './pages/Integrations.jsx';
 import Email from './pages/Email.jsx';
 import EmailSequences from './pages/EmailSequences.jsx';
+import Book from './pages/Book.jsx';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +86,7 @@ export const PAGES = {
     "Integrations": Integrations,
     "Email": Email,
     "EmailSequences": EmailSequences,
+    "Book": Book,
 }
 
 export const pagesConfig = {
