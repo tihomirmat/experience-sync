@@ -99,8 +99,11 @@ Deno.serve(async (req) => {
       language: booking.customer_language,
     });
 
+    // Strip client-side helper fields (e.g. _channelCommissionRate)
+    const clean = Object.fromEntries(Object.entries(booking).filter(([k]) => !k.startsWith('_')));
+
     const created = await base44.asServiceRole.entities.Booking.create({
-      ...booking,
+      ...clean,
       tenant_id,
       status,
       adults,
