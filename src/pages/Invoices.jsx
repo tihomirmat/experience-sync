@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Search, FileText, Send, Download, Trash2, ChevronRight } from 'lucide-react';
 import { format, addDays } from 'date-fns';
+import { toast } from 'sonner';
 import InvoiceProviderActions from '../components/invoicing/InvoiceProviderActions';
 
 export default function Invoices() {
