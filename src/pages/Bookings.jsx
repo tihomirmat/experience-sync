@@ -52,8 +52,29 @@ export default function Bookings() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Booking.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['bookings'] }); setShowForm(false); },
+    mutationFn: async (data) => {
+      // Server-side: capacity check, find-or-create Customer, departure link
+      const { data: res } = await base44.functions.invoke('createBooking', {
+        tenant_id: tenantId,
+        booking: data,
+      });
+      if (res?.error) throw new Error(res.error);
+      return res.booking;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['departures'] });
+      setShowForm(false);
+      setForm({});
+      toast.success('Rezervacija ustvarjena');
+    },
+    onError: (e) => toast.error(e.message || 'Napaka pri ustvarjanju rezervacije'),
+  });
+
+  const { data: formDepartures = [] } = useQuery({
+    queryKey: ['departures', tenantId, form.experience_id],
+    queryFn: () => base44.entities.Departure.filter({ tenant_id: tenantId, experience_id: form.experience_id, status: 'open' }),
+    enabled: !!tenantId && !!form.experience_id && showForm,
   });
 
   const { data: invoices = [] } = useQuery({
@@ -70,17 +91,14 @@ export default function Bookings() {
   const createInvoiceMutation = useMutation({
     mutationFn: async ({ booking, formData }) => {
       const tenant = currentTenant;
-      const seq = (tenant.invoice_seq_current || 0) + 1;
-      const invNumber = `${tenant.invoice_prefix || 'INV-'}${String(seq).padStart(6, '0')}`;
-      await base44.entities.Tenant.update(tenant.id, { invoice_seq_current: seq });
-      const inv = await base44.entities.Invoice.create({
-        ...formData,
-        invoice_number: invNumber,
+      // Invoice number is allocated server-side (atomic, no duplicates)
+      const { data: res } = await base44.functions.invoke('createInvoice', {
         tenant_id: tenantId,
+        invoice: formData,
         booking_id: booking.id,
       });
-      await base44.entities.Booking.update(booking.id, { invoice_id: inv.id });
-      return inv;
+      if (res?.error) throw new Error(res.error);
+      return res.invoice;
     },
     onSuccess: (inv) => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
