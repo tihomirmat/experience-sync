@@ -79,6 +79,35 @@ export default function EmailCompose({ tenantId, initialTo = '', initialSubject 
     }
     setSending(true);
     const matchedCustomer = customers.find(c => c.email === form.to);
+
+    // Immediate send goes through the backend (actually delivers via Resend)
+    if (!scheduled) {
+      try {
+        const { data: res } = await base44.functions.invoke('sendEmail', {
+          tenant_id: tenantId,
+          to_email: form.to,
+          subject: form.subject,
+          body_html: form.body,
+          cc: form.cc || undefined,
+          bcc: form.bcc || undefined,
+          customer_id: contextData.customer_id || matchedCustomer?.id,
+          booking_id: contextData.booking_id,
+          invoice_id: contextData.invoice_id,
+          inquiry_id: contextData.inquiry_id,
+        });
+        if (res?.error) throw new Error(res.error);
+        queryClient.invalidateQueries({ queryKey: ['email-messages'] });
+        toast.success('Email poslan');
+        setSending(false);
+        onSent?.();
+        onClose();
+      } catch (e) {
+        toast.error(e.message || 'Pošiljanje ni uspelo');
+        setSending(false);
+      }
+      return;
+    }
+
     const messageData = {
       tenant_id: tenantId,
       direction: 'outbound',
