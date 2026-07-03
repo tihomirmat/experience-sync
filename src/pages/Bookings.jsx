@@ -90,7 +90,6 @@ export default function Bookings() {
 
   const createInvoiceMutation = useMutation({
     mutationFn: async ({ booking, formData }) => {
-      const tenant = currentTenant;
       // Invoice number is allocated server-side (atomic, no duplicates)
       const { data: res } = await base44.functions.invoke('createInvoice', {
         tenant_id: tenantId,
@@ -199,6 +198,32 @@ export default function Bookings() {
                 </SelectContent>
               </Select>
             </div>
+            {form.experience_id && (
+              <div className="space-y-1.5">
+                <Label>Odhod (termin)</Label>
+                <Select value={form.departure_id || ''} onValueChange={v => {
+                  const dep = formDepartures.find(d => d.id === v);
+                  setForm({
+                    ...form,
+                    departure_id: v,
+                    departure_date: dep?.start_at ? dep.start_at.slice(0, 10) : form.departure_date,
+                    departure_time: dep?.start_at ? dep.start_at.slice(11, 16) : form.departure_time,
+                  });
+                }}>
+                  <SelectTrigger><SelectValue placeholder="Izberi termin (ali vnesi datum ročno spodaj)" /></SelectTrigger>
+                  <SelectContent>
+                    {[...formDepartures].sort((a, b) => (a.start_at || '').localeCompare(b.start_at || '')).map(d => (
+                      <SelectItem key={d.id} value={d.id}>
+                        {d.start_at ? format(new Date(d.start_at), 'd. M. yyyy HH:mm') : '—'} · prosto {d.capacity_remaining ?? d.capacity_total ?? '—'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {formDepartures.length === 0 && (
+                  <p className="text-xs text-gray-400">Ni odprtih terminov za to doživetje — rezervacija bo shranjena brez povezave na termin.</p>
+                )}
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5"><Label>Customer Name</Label>
                 <Input value={form.customer_name || ''} onChange={e => setForm({...form, customer_name: e.target.value})} /></div>
