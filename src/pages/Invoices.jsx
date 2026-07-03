@@ -53,14 +53,17 @@ export default function Invoices() {
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
-      // Allocate invoice number
-      const tenant = currentTenant;
-      const seq = (tenant.invoice_seq_current || 0) + 1;
-      const invNumber = `${tenant.invoice_prefix || 'INV-'}${String(seq).padStart(6, '0')}`;
-      await base44.entities.Tenant.update(tenant.id, { invoice_seq_current: seq });
-      return base44.entities.Invoice.create({ ...data, invoice_number: invNumber });
+      // Invoice number is allocated server-side (atomic, no duplicates)
+      const { data: res } = await base44.functions.invoke('createInvoice', {
+        tenant_id: tenantId,
+        invoice: data,
+        booking_id: data.booking_id || undefined,
+      });
+      if (res?.error) throw new Error(res.error);
+      return res.invoice;
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['invoices'] }); setShowForm(false); },
+    onError: (e) => toast.error(e.message || 'Napaka pri ustvarjanju računa'),
   });
 
   const updateMutation = useMutation({
