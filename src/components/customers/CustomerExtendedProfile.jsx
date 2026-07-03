@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,35 +16,45 @@ const CATEGORY_COLORS = {
   one_time: 'bg-gray-100 text-gray-600 border-gray-200',
 };
 
+// Fields live directly on Customer (the separate CustomerExtended entity is deprecated)
+const PROFILE_FIELDS = ['birthdate', 'country', 'language', 'source', 'tags', 'allergies', 'category', 'next_followup_date', 'last_contact_date'];
+
 export default function CustomerExtendedProfile({ customer, tenantId }) {
   const queryClient = useQueryClient();
   const [tagInput, setTagInput] = useState('');
   const [form, setForm] = useState(null);
 
-  const { data: extended, isLoading } = useQuery({
-    queryKey: ['customer-extended', customer.id],
-    queryFn: async () => {
-      const results = await base44.entities.CustomerExtended.filter({ tenant_id: tenantId, customer_id: customer.id });
-      return results[0] || null;
-    },
-    enabled: !!customer.id,
-    onSuccess: (data) => {
-      if (data) setForm({ ...data });
-      else setForm({ tenant_id: tenantId, customer_id: customer.id, tags: [], language: 'sl', source: 'direct', category: 'regular' });
-    },
-  });
+  useEffect(() => {
+    if (!customer) return;
+    setForm({
+      birthdate: customer.birthdate || '',
+      country: customer.country || '',
+      language: customer.language || 'sl',
+      source: customer.source || 'direct',
+      tags: customer.tags || [],
+      allergies: customer.allergies || '',
+      category: customer.category || 'regular',
+      next_followup_date: customer.next_followup_date || '',
+      last_contact_date: customer.last_contact_date || '',
+    });
+  }, [customer?.id]);
 
   const saveMutation = useMutation({
-    mutationFn: (data) => extended
-      ? base44.entities.CustomerExtended.update(extended.id, data)
-      : base44.entities.CustomerExtended.create(data),
+    mutationFn: (data) => {
+      const payload = {};
+      for (const key of PROFILE_FIELDS) {
+        if (data[key] !== '' && data[key] !== undefined) payload[key] = data[key];
+      }
+      return base44.entities.Customer.update(customer.id, payload);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customer-extended', customer.id] });
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
       toast.success('Profil shranjen');
     },
+    onError: (e) => toast.error(e.message || 'Napaka pri shranjevanju'),
   });
 
-  if (isLoading || !form) return <div className="text-sm text-gray-400 py-4">Nalagam...</div>;
+  if (!form) return <div className="text-sm text-gray-400 py-4">Nalagam...</div>;
 
   const addTag = () => {
     if (!tagInput.trim()) return;
@@ -99,6 +109,7 @@ export default function CustomerExtendedProfile({ customer, tenantId }) {
               <SelectItem value="de">Deutsch</SelectItem>
               <SelectItem value="it">Italiano</SelectItem>
               <SelectItem value="fr">Français</SelectItem>
+              <SelectItem value="hr">Hrvaščina</SelectItem>
               <SelectItem value="other">Drugo</SelectItem>
             </SelectContent>
           </Select>
@@ -158,7 +169,7 @@ export default function CustomerExtendedProfile({ customer, tenantId }) {
 
       <Button size="sm" className="bg-[#1a5c38] gap-1.5 w-full"
         onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending}>
-        <Save className="w-3.5 h-3.5" /> Shrani razširjeni profil
+        <Save className="w-3.5 h-3.5" /> Shrani profil
       </Button>
     </div>
   );
