@@ -206,6 +206,10 @@ function LayoutInner({ children, currentPageName }) {
 }
 
 export default function Layout({ children, currentPageName }) {
+  // Public pages render without the admin shell (no sidebar, no tenant context)
+  if (currentPageName === 'Book') {
+    return <>{children}</>;
+  }
   return (
     <TenantProvider>
       <LayoutInner currentPageName={currentPageName}>
