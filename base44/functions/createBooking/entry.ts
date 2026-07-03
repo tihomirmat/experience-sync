@@ -16,7 +16,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 const ALLOWED_ROLES = ['owner', 'admin', 'staff'];
 const VALID_LANGUAGES = ['sl', 'en', 'de', 'it', 'fr', 'hr', 'other'];
 
-export async function findOrCreateCustomer(base44, tenant_id, { name, email, phone, country, language }) {
+async function findOrCreateCustomer(base44, tenant_id, { name, email, phone, country, language }) {
   let customer = null;
   const cleanEmail = (email || '').trim().toLowerCase();
 
