@@ -41,6 +41,10 @@ const STRINGS = {
     perPerson: '/os.',
     successTitle: 'Rezervacija prejeta!',
     successBody: 'Vaša rezervacija je bila uspešno oddana in čaka na potrditev. Potrditev boste prejeli po e-pošti.',
+    paidTitle: 'Plačilo uspešno!',
+    paidBody: 'Vaše predplačilo je bilo prejeto in rezervacija je potrjena. Potrditev boste prejeli po e-pošti.',
+    cancelledTitle: 'Plačilo ni bilo dokončano',
+    cancelledBody: 'Vaša rezervacija je oddana in čaka na potrditev, vendar plačilo ni bilo dokončano. Kontaktirali vas bomo glede plačila.',
     reference: 'Referenčna številka',
     another: 'Nova rezervacija',
     notFound: 'Doživetje ni bilo najdeno ali ni več na voljo.',
@@ -70,6 +74,10 @@ const STRINGS = {
     perPerson: '/pp',
     successTitle: 'Booking received!',
     successBody: 'Your booking request has been submitted and is awaiting confirmation. You will receive a confirmation by e-mail.',
+    paidTitle: 'Payment successful!',
+    paidBody: 'Your deposit has been received and the booking is confirmed. You will receive a confirmation by e-mail.',
+    cancelledTitle: 'Payment not completed',
+    cancelledBody: 'Your booking request has been submitted and is awaiting confirmation, but the payment was not completed. We will contact you about the payment.',
     reference: 'Reference number',
     another: 'New booking',
     notFound: 'Experience not found or no longer available.',
@@ -154,6 +162,11 @@ export default function Book() {
         website: form.website, // honeypot
       });
       if (data?.error) { setSubmitError(data.error); return; }
+      if (data?.checkout_url) {
+        // Redirect to Stripe Checkout for the deposit payment
+        window.location.href = data.checkout_url;
+        return;
+      }
       setSuccess(data);
     } catch (e) {
       setSubmitError(e.message || 'Error');
@@ -167,6 +180,30 @@ export default function Book() {
     next.set('lang', l);
     setSearchParams(next, { replace: true });
   };
+
+  // Return from Stripe Checkout
+  const paidReturn = searchParams.get('paid') === '1';
+  const cancelledReturn = searchParams.get('cancelled') === '1';
+  const returnRef = searchParams.get('ref') || '';
+  if (paidReturn || cancelledReturn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 p-6">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border border-stone-100 p-8 text-center">
+          {paidReturn
+            ? <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
+            : <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />}
+          <h1 className="text-xl font-semibold text-stone-900 mb-2">{paidReturn ? t.paidTitle : t.cancelledTitle}</h1>
+          <p className="text-sm text-stone-600 mb-4">{paidReturn ? t.paidBody : t.cancelledBody}</p>
+          {returnRef && (
+            <>
+              <p className="text-xs text-stone-400 uppercase tracking-wide">{t.reference}</p>
+              <p className="font-mono text-lg font-semibold text-stone-800">{returnRef}</p>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
